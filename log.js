@@ -1,34 +1,19 @@
 // defines nice logs to have
 
-var color = require('colors');
+var color = require('colors'),
+	debug = require('./config').debug;
 
 module.exports = {
-	dbError: function () { // when there is an error that isn't exactly fatal
-		def.creator('DB error', 'magenta', arguments);
-	},
-
-	dbFatal: function () { // when there is an error that should NEVER happen
-		def.creator('DB fatal error', 'red', arguments);
-	},
-
-	dbInfo: function () { // logs info that may be nice to have
-		def.creator('DB info', 'cyan', arguments);
-	},
-
 	debug: function () { // should only be used to help debug
-		def.creator('debug', 'yellow', arguments);
-	},
-
-	fatal: function () { // used for general fatal bugs
-		def.creator('fatal error', 'red', arguments);
+		if (debug) { // only if verbose
+			def.creator('debug', 'yellow', arguments);
+		} else {
+			;//
+		};
 	},
 
 	error: function () { // used for general bugs
 		def.creator('error', 'magenta', arguments);
-	},
-
-	ioInfo: function () { // socket.io info
-		def.creator('IO info', 'cyan', arguments)
 	},
 
 	authError: function () { // any errors that have to do with auth
@@ -43,4 +28,5 @@ module.exports = {
 		console.log(('</' + tag + '>').italic[color]);
 	}
 }
+
 var def = module.exports;
