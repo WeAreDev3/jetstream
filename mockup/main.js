@@ -12,15 +12,15 @@ var chats = [{
     }]
 }, {
     'name': null,
-    'people': 'Jesse Smick',
+    'people': 'Michael Edlinger',
     'messages': [{
-        'user': 'Jesse Smick',
+        'user': 'Michael Edlinger',
         'date': new Date(2014, 5, 27, 22, 45),
         'content': 'What\'s up?'
     }, {
         'user': 'Tal Ben-Ari',
         'date': new Date(),
-        'content': 'Not much, just w'
+        'content': 'Not much, just platasdfasdfasfdasdfasdfasdfasfasfdfsdfsdfsdfsdfsdfform'
     }]
 }], user = {
     'name': 'Tal Ben-Ari'
