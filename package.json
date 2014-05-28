@@ -1,0 +1,23 @@
+{
+    "name": "jetstream",
+    "version": "0.0.1",
+    "description": "A chat server for nodejs using redis and rethinkdb",
+    "contributors": [{
+        "name": "Tal Ben-Ari",
+        "email": "talbenari1@gmail.com"
+    }, {
+        "name": "Michael Edlinger",
+        "email": "mkeedlinger@gmail.com"
+    }, {
+        "name": "Jesse Smick",
+        "email": "janka102@gmail.com"
+    }],
+    "private": true,
+    "dependencies": {
+    	"rethinkdb": "^1.12.0-0",
+    	"socket.io": "^0.9.16",
+    	"colors": "^0.6.2",
+    	"bcrypt": "^0.7.8",
+    	"mach": ""
+    }
+}
