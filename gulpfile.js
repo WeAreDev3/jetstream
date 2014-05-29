@@ -17,6 +17,7 @@ gulp.task('watch', function () {
     gulp.watch(paths['sass'], ['css']);
     nodemon({
         'script': 'server.js',
+        'ext': 'js html',
         'ignore': ['node_modules']
     })
 });

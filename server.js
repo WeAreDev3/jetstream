@@ -4,7 +4,10 @@ var log = require('./log'),
 	db = require('./db'),
 	config = require('./config'),
     app = require('express')(),
-    swig = require('swig');
+    swig = require('swig'),
+    morgan = require('morgan');
+
+app.use(morgan('dev'));
 
 // Assign swig.renderFile to all .html files
 app.engine('html', swig.renderFile);

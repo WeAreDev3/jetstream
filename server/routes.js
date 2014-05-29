@@ -12,7 +12,7 @@ module.exports = function(app) {
     // A catch-all (i.e. 404)
     app.route('*').all(function (req, res) {
         res.render('404', {
-            title: 'NEAR Stack - 404',
+            title: config.appName + ' - 404',
             appName: config.appName
         });
     });
