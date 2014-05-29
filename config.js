@@ -1,6 +1,4 @@
-// config file
-
-// def
+// Define all of the configurations that we want
 module.exports = {
 	rethinkdb: {
 		'host': '10.225.10.7', // changes often
@@ -14,9 +12,9 @@ module.exports = {
 	redis: {
 		'host': 'localhost',
 		'port': 6379,
-		'database': 1, // can this be a string???
-		'password': 'password' // not prod ready
+		'database': 1,
+		'password': 'password' // TODO: make production-ready
 	},
 
-	debug: true // crazy much info
+	debug: true
 }
