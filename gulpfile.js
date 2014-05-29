@@ -1,5 +1,6 @@
 var gulp = require('gulp'),
     sass = require('gulp-sass'),
+    nodemon = require('gulp-nodemon'),
 
     paths = {
         'sass': './server/stylesheets/*.scss',
@@ -13,7 +14,11 @@ gulp.task('css', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch(paths['sass'], 'css');
+    gulp.watch(paths['sass'], ['css']);
+    nodemon({
+        'script': 'server.js',
+        'ignore': ['node_modules']
+    })
 });
 
 gulp.task('default', ['css', 'watch']);

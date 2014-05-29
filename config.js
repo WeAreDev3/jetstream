@@ -16,5 +16,9 @@ module.exports = {
 		'password': 'password' // TODO: make production-ready
 	},
 
+	port: process.env.PORT || 3000,
+	root: __dirname,
+	appName: 'NEAR Stack',
+
 	debug: true
 }
