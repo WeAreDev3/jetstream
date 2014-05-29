@@ -3,11 +3,11 @@
 // def
 module.exports = {
 	rethinkdb: {
-		'host': '192.168.1.77',
+		'host': '10.225.10.7', // changes often
 		'port': 28015,
 		'db': 'test',
 		'authKey': 'password', // not prod ready
-		'poolSize': 20,
+		'poolSize': 1,
 		tables: ['users']
 	},
 
