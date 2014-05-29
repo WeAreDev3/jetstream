@@ -4,12 +4,19 @@ var color = require('colors'),
 	debug = require('./config').debug;
 
 module.exports = {
+	setupInfo: function () {
+		def.creator('SetupInfo', 'magenta', arguments);
+	},
 	debug: function () { // should only be used to help debug
 		if (debug) { // only if verbose
 			def.creator('debug', 'yellow', arguments);
 		} else {
-			;//
+			//
 		};
+	},
+
+	dbConnError: function () {
+		def.creator('DB conn error', 'red', arguments);
 	},
 
 	error: function () { // used for general bugs
