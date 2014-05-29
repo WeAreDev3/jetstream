@@ -9,9 +9,11 @@ var redis = require('then-redis'),
 // def
 module.exports = {
     getUserInfo: function(username) {
-    	; // idk, we're using callback async now
+    	def.rql(function (err, conn) {
+    		 // r.table('users')
+    	})
     },
-    onConnect: function(callback) {
+    rql: function(callback) {
         r.connect({
             host: config.rethinkdb.host,
             port: config.rethinkdb.port,
