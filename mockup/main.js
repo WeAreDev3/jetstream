@@ -153,6 +153,9 @@ function toggleChat () {
 }
 
 function respond () {
+    if ((this.value ? this.value : this.previousElementSibling.value) === '') {
+        
+    };
     addMessage(this.parentElement.parentElement, {
         'user': 'Tal Ben-Ari',
         'date': new Date(),
