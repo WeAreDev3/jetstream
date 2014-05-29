@@ -40,7 +40,10 @@
         "morgan": "^1.1.1",
 
         "gulp": "^3.6.2",
+        "gulp-util": "^2.2.14",
         "gulp-sass": "^0.7.1",
-        "gulp-nodemon": "^1.0.3"
+        "gulp-nodemon": "^1.0.3",
+        "gulp-jshint": "^1.6.1",
+        "gulp-concat": "^2.2.0"
     }
 }
