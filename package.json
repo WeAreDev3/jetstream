@@ -27,6 +27,7 @@
 
     "dependencies": {
         "rethinkdb": "^1.12.0-1",
+        "uuid": "^1.4.1",
         "socket.io": "^0.9.16",
         "colors": "^0.6.2",
         "bcrypt": "^0.7.8",
