@@ -27,4 +27,4 @@ require(config.root + '/server/routes')(app);
 
 // Open the ports for business
 app.listen(config.port);
-log('Server running on port', config.port);
+l('Server running on port', config.port);
