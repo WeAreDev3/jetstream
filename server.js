@@ -1,5 +1,5 @@
 // Define all of the modules needed in the file
-var log = require('./log'),
+var l = require('./log'),
 	io = require('socket.io'),
 	db = require('./db'),
 	config = require('./config'),
