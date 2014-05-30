@@ -19,8 +19,6 @@ app.set('views', config.root + '/server/views');
 
 // Define public folders for our web app
 app.use('/', express.static(config.root + '/public'));
-app.use('/css', express.static(config.root + '/public/css'));
-app.use('/js', express.static(config.root + '/public/js'));
 
 // Run our router module to prepare for incoming requests
 require(config.root + '/server/routes')(app);
