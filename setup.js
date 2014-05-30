@@ -16,7 +16,7 @@ db.rql(function(err, conn) {
         if (err) {
             l.setupInfo('Potential Error', err)
         } else {
-        	l.setupInfo(result, 'DB: ' + config.rethinkdb.db);
+        	l.setupSuccess(result, 'DB: ' + config.rethinkdb.db);
         };
         for (var table in config.rethinkdb.tables) {
             (function(tbl) {
@@ -25,7 +25,7 @@ db.rql(function(err, conn) {
                         if (err) {
                             l.setupInfo('Potential Error', err);
                         } else {
-                        	l.setupInfo(result, 'TBL: ' + tbl);
+                        	l.setupSuccess(result, 'TBL: ' + tbl);
                     	};
                         for (var index in config.rethinkdb.tables[tbl]) {
                             (function(inx) {
@@ -35,7 +35,7 @@ db.rql(function(err, conn) {
                                         if (err) {
                                             l.setupInfo('Potential Error', err);
                                         } else {
-                                            l.setupInfo(result, "INX: " + config.rethinkdb.tables[tbl][inx]);
+                                            l.setupSuccess(result, "INX: " + config.rethinkdb.tables[tbl][inx]);
                                         };
                                     })
                             })(index);
