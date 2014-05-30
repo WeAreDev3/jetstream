@@ -7,7 +7,7 @@ var redis = require('then-redis'),
     r = require('rethinkdb');
 
 // def
-def = {
+var def = {
     rql: function(callback) {
         r.connect({
             host: config.rethinkdb.host,
@@ -93,7 +93,8 @@ def = {
         this.password = password;
         this.firstName = fname;
         this.lastName = lname;
-    };
+        this.timestamp = r.now();
+    },
 
     createUser: function (newUser, callback) { // takes User constructor
         def.rql(function (err, conn) {
@@ -109,4 +110,4 @@ def = {
     }
 }
 
-var module.exports = def;
+module.exports = def;
