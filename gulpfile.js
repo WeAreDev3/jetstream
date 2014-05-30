@@ -4,6 +4,7 @@ var gulp = require('gulp'),
     nodemon = require('gulp-nodemon'),
     jshint = require('gulp-jshint'),
     concat = require('gulp-concat'),
+    uglify = require('gulp-uglifyjs'),
 
     paths = {
         'sass': './server/stylesheets/*.scss',
@@ -25,7 +26,7 @@ gulp.task('js', function () {
 
 gulp.task('hint', function () {
     gulp.src(['**.js', '!node_modules/**', '!public/**'])
-        .pipe(jshint);
+        .pipe(jshint());
 });
 
 gulp.task('watch', function () {
