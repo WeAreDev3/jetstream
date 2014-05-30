@@ -44,6 +44,7 @@
         "gulp-sass": "^0.7.1",
         "gulp-nodemon": "^1.0.3",
         "gulp-jshint": "^1.6.1",
-        "gulp-concat": "^2.2.0"
+        "gulp-concat": "^2.2.0",
+        "gulp-uglifyjs": "^0.3.0"
     }
 }
