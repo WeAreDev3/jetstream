@@ -16,7 +16,7 @@ module.exports = {
 	redis: {
 		'host': 'localhost',
 		'port': 6379,
-		'database': 1,
+		'db': 1,
 		'password': 'password' // TODO: make production-ready
 	},
 
