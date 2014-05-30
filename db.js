@@ -7,6 +7,12 @@ var redis = require('then-redis'),
     r = require('rethinkdb');
 
 // def
+var rd = redis.createClient({
+    host: config.redis.host,
+    port: config.redis.port,
+    database: config.redis.db,
+    password: config.redis.password
+})
 var def = {
     rql: function(callback) {
         r.connect({
