@@ -18,15 +18,16 @@ gulp.task('css', function () {
 });
 
 gulp.task('js', function () {
-    gulp.src('server/js/**.js')
+    gulp.src(paths['js'])
         .pipe(concat('jetstream.min.js'))
         .pipe(uglify())
-        .pipe(gulp.dest('public/js/jetstream.min.js'));
+        .pipe(gulp.dest('public'));
 });
 
 gulp.task('hint', function () {
     gulp.src(['**.js', '!node_modules/**', '!public/**'])
-        .pipe(jshint());
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'));
 });
 
 gulp.task('watch', function () {
