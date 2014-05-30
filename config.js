@@ -1,11 +1,10 @@
 // Define all of the configurations that we want
 module.exports = {
 	rethinkdb: {
-		'host': 'localhost', // changes often
+		'host': 'localhost',
 		'port': 28015,
 		'db': 'jetstream',
 		'authKey': 'password', // TODO: make production-ready
-		'poolSize': 1,
 		tables: {
 			users: ['username'],
 			chats: ['timestamp'],
@@ -16,7 +15,7 @@ module.exports = {
 	redis: {
 		'host': 'localhost',
 		'port': 6379,
-		'db': 1,
+		'database': 0,
 		'password': 'password' // TODO: make production-ready
 	},
 
