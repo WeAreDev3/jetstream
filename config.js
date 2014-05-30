@@ -25,4 +25,4 @@ module.exports = {
 	appName: 'JetStream',
 
 	debug: true
-}
+};
