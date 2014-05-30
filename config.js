@@ -4,7 +4,7 @@ module.exports = {
 		'host': 'localhost', // changes often
 		'port': 28015,
 		'db': 'jetstream',
-		'authKey': 'password', // not prod ready
+		'authKey': 'password', // TODO: make production-ready
 		'poolSize': 1,
 		tables: {
 			users: ['username'],

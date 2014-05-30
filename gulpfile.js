@@ -12,13 +12,13 @@ var gulp = require('gulp'),
     };
 
 gulp.task('css', function () {
-    gulp.src(paths['sass'])
+    gulp.src(paths.sass)
         .pipe(sass())
         .pipe(gulp.dest('./public/css'));
 });
 
 gulp.task('js', function () {
-    gulp.src(paths['js'])
+    gulp.src(paths.js)
         .pipe(concat('jetstream.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest('public'));
@@ -31,8 +31,8 @@ gulp.task('hint', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch(paths['sass'], ['css']);
-    gulp.watch(paths['js'], ['hint', 'js']);
+    gulp.watch(paths.sass, ['css']);
+    gulp.watch(paths.js, ['hint', 'js']);
     nodemon({
         'script': 'server.js',
         'ext': 'js,html',
