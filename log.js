@@ -7,6 +7,9 @@ module.exports = {
 	setupInfo: function () {
 		def.creator('SetupInfo', 'magenta', arguments);
 	},
+	setupSuccess: function () {
+		def.creator('SetupSuccess', 'green', arguments);
+	},
 	debug: function () { // should only be used to help debug
 		if (debug) { // only if verbose
 			def.creator('debug', 'yellow', arguments);

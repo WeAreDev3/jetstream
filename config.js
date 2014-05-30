@@ -1,14 +1,14 @@
 // Define all of the configurations that we want
 module.exports = {
 	rethinkdb: {
-		'host': '10.225.10.7', // changes often
+		'host': 'localhost', // changes often
 		'port': 28015,
-		'db': 'final',
+		'db': 'jetstream',
 		'authKey': 'password', // not prod ready
 		'poolSize': 1,
 		tables: {
 			users: ['username'],
-			chats: [],
+			chats: ['timestamp'],
 			messages: ['chatId', 'timestamp']
 		}
 	},
