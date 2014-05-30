@@ -3,40 +3,48 @@
 var color = require('colors'),
     debug = require('./config').debug;
 
-module.exports = {
-    setupInfo: function () {
-        def.creator('SetupInfo', 'magenta', arguments);
-    },
-    setupSuccess: function () {
-        def.creator('SetupSuccess', 'green', arguments);
-    },
-    debug: function () { // should only be used to help debug
-        if (debug) { // only if verbose
-            def.creator('debug', 'yellow', arguments);
-        } else {
-            //
-        };
-    },
 
-    dbConnError: function () {
-        def.creator('DB conn error', 'red', arguments);
-    },
+function logger(tag, color, args) {
+    var logs = Array.prototype.slice.call(args),
+        logTag = '[' + tag + ']',
+        logMessage = [logTag[color]].concat(logs);
 
-    error: function () { // used for general bugs
-        def.creator('error', 'magenta', arguments);
-    },
-
-    authError: function () { // any errors that have to do with auth
-        def.creator('Auth error', 'magenta', arguments);
-    },
-
-    creator: function (tag, color, args) { // tryin to keep my logs dry
-        console.log(('<' + tag + '>').bold.underline[color]);
-        for (arg in args) {
-            console.log(args[arg]);
-        }
-        console.log(('</' + tag + '>').italic[color]);
-    }
+    console.log.apply(console, logMessage);
 }
 
-var def = module.exports;
+module.exports = function() {
+    var self = module.exports,
+        args = Array.prototype.slice.call(arguments);
+
+    self.debug.apply(self, args);
+};
+
+module.exports.debug = function() {
+    if (debug) {
+        logger('debug', 'yellow', arguments);
+    }
+};
+
+module.exports.info = function() {
+    logger('info', 'blue', arguments);
+};
+
+module.exports.error = function() {
+    logger('error', 'red', arguments);
+};
+
+module.exports.setupInfo = function() {
+    logger('setupInfo', 'magenta', arguments);
+};
+
+module.exports.setupSuccess = function() {
+    logger('setupSuccess', 'green', arguments);
+};
+
+module.exports.dbConnError = function() {
+    logger('dbConnError', 'red', arguments);
+};
+
+module.exports.authError = function() {
+    logger('authError', 'magenta', arguments);
+};

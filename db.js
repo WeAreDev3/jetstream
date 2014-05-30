@@ -7,7 +7,13 @@ var redis = require('then-redis'),
     r = require('rethinkdb');
 
 // def
-module.exports = {
+var rd = redis.createClient({
+    host: config.redis.host,
+    port: config.redis.port,
+    database: config.redis.db,
+    password: config.redis.password
+})
+var def = {
     rql: function(callback) {
         r.connect({
             host: config.rethinkdb.host,
@@ -61,7 +67,53 @@ module.exports = {
                     };
                 })
         })
+    },
+
+    createChat: function (name, userList, callback) {
+    	var addChatUser = function (userid, chatid) {
+    		r.table('users').get(userid).update({
+    			list: r.row('list').append(chatid)
+    		}).run(conn, function (err, result) {
+    			// body...
+    		})
+    	}
+    	def.rql(function (err, conn) {
+    		r.table('chats').insert({
+    			'users': userlist,
+    			'name': name
+    		}).run(conn, function (err, result) {
+    			if (err) {
+    				callback(err);
+    			} else {
+    				for (var user in userlist) {
+    					addChatUser(userlist[user], result["generated_keys"][0]);
+    				}
+    			};
+    		})
+    	})
+    },
+
+    User: function (username, email, password, fname, lname) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.firstName = fname;
+        this.lastName = lname;
+        this.timestamp = r.now();
+    },
+
+    createUser: function (newUser, callback) { // takes User constructor
+        def.rql(function (err, conn) {
+            r.table('users').insert(newUser)
+            .run(conn, function (err, result) {
+                if (err) {
+                    callback(err);
+                } else {
+                    callback(null, result);
+                };
+            })
+        })
     }
 }
 
-var def = module.exports;
+module.exports = def;

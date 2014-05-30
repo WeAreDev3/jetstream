@@ -1,5 +1,5 @@
 // Define all of the modules needed in the file
-var log = require('./log'),
+var l = require('./log'),
 	io = require('socket.io'),
 	db = require('./db'),
 	config = require('./config'),
@@ -25,4 +25,4 @@ require(config.root + '/server/routes')(app);
 
 // Open the ports for business
 app.listen(config.port);
-console.log('Server running on port', config.port);
+l('Server running on port', config.port);
