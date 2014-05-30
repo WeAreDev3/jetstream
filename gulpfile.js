@@ -1,6 +1,6 @@
 var fs = require('fs'),
     path = require('path'),
-    es = require('event-stream')
+    es = require('event-stream'),
     gulp = require('gulp'),
     util = require('gulp-util'),
     sass = require('gulp-sass'),
