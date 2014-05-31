@@ -23,9 +23,9 @@ var def = {
             if (err) {
                 l.dbConnError(err);
             } else {
-                connection['_id'] = Math.floor(Math.random() * 10001);
+                connection._id = Math.floor(Math.random() * 10001);
                 callback(err, connection);
-            };
+            }
         });
     },
     getUserInfo: function(username, callback) {
@@ -38,9 +38,9 @@ var def = {
                         callback(err);
                     } else {
                         callback(null, results);
-                    };
-                })
-        })
+                    }
+                });
+        });
     },
     getConversationInfo: function(chatId, callback) {
         def.rql(function(err, conn) {
@@ -50,9 +50,9 @@ var def = {
                         callback(err);
                     } else {
                         callback(null, result);
-                    };
-                })
-        })
+                    }
+                });
+        });
     },
     getLastMessages: function(chatId, callback) {
         def.rql(function(err, conn) {
@@ -64,9 +64,9 @@ var def = {
                         callback(err);
                     } else {
                         callback(null, results);
-                    };
-                })
-        })
+                    }
+                });
+        });
     },
 
     createChat: function (name, userList, callback) {
@@ -75,8 +75,8 @@ var def = {
     			list: r.row('list').append(chatid)
     		}).run(conn, function (err, result) {
     			// body...
-    		})
-    	}
+    		});
+    	};
     	def.rql(function (err, conn) {
     		r.table('chats').insert({
     			'users': userlist,
@@ -86,11 +86,11 @@ var def = {
     				callback(err);
     			} else {
     				for (var user in userlist) {
-    					addChatUser(userlist[user], result["generated_keys"][0]);
+    					addChatUser(userlist[user], result.generated_keys[0]);
     				}
-    			};
-    		})
-    	})
+    			}
+    		});
+    	});
     },
 
     User: function (username, email, password, fname, lname) {
@@ -110,9 +110,9 @@ var def = {
                     callback(err);
                 } else {
                     callback(null, result);
-                };
-            })
-        })
+                }
+            });
+        });
     },
 
     Message: function (initUserName, initUserId, chatId, message) {
@@ -142,17 +142,17 @@ var def = {
                                 } else {
                                     def.rds.get(message.id, function (err, res) {
                                         l(res);
-                                    })
+                                    });
                                     callback(null, result);
-                                };
-                            })
-                        })
-                    };
+                                }
+                            });
+                        });
+                    }
                 });
-            };
+            }
         });
     }
-}
+};
 
 // db help
 def.rds.on('ready', function () {
