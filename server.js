@@ -23,6 +23,12 @@ app.use('/', express.static(config.root + '/public'));
 // Run our router module to prepare for incoming requests
 require(config.root + '/server/routes')(app);
 
+// db listener
+db.rdsSubscriber.on('pmessage', function (pattern, channel, message) {
+    l('channel: ' + channel);
+    l('message: ', JSON.parse(message));
+});
+
 // Open the ports for business
 app.listen(config.port);
 l.info('Server running on port', config.port);
