@@ -8,7 +8,8 @@ var r = require('rethinkdb'),
     redis = require('then-redis'),
     db = require('./db');
 
-
+var i = 0,
+    j = 0;
 // sets up server
 db.rql(function(err, conn) {
     r.dbCreate(config.rethinkdb.db)
@@ -37,6 +38,10 @@ db.rql(function(err, conn) {
                                         } else {
                                             l.setupSuccess(result, "INX: " + config.rethinkdb.tables[tbl][inx]);
                                         };
+                                        j++;
+                                        if (j === i) {
+                                            throw l.info("Rethinkdb configured successfully! Killing node...");
+                                        };
                                     })
                             })(index);
                         }
@@ -45,3 +50,9 @@ db.rql(function(err, conn) {
         }
     });
 });
+
+for (var table in config.rethinkdb.tables) {
+    for (var index in config.rethinkdb.tables[table])  {
+        i++;
+    }
+}
