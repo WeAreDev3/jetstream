@@ -8,7 +8,7 @@ module.exports = {
 		tables: {
 			users: ['username'],
 			chats: ['timestamp'],
-			messages: ['chatId', 'timestamp']
+			messages: ['chatId', 'timestamp', 'user']
 		}
 	},
 
