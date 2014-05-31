@@ -1,19 +1,19 @@
 // db defs
 
 // depends
-var redis = require('then-redis'),
+var redis = require('redis'),
     l = require('./log'),
     config = require('./config'),
-    r = require('rethinkdb');
+    r = require('rethinkdb'),
+    uuid = require('uuid');
+
 
 // def
-var rd = redis.createClient({
-    host: config.redis.host,
-    port: config.redis.port,
-    database: config.redis.db,
-    password: config.redis.password
-})
 var def = {
+    rds: redis.createClient(config.redis.port, config.redis.host, {
+        auth_pass: config.redis.password
+    }),
+
     rql: function(callback) {
         r.connect({
             host: config.rethinkdb.host,
@@ -21,7 +21,7 @@ var def = {
             db: config.rethinkdb.db
         }, function(err, connection) {
             if (err) {
-                l.dbConnError(err)
+                l.dbConnError(err);
             } else {
                 connection['_id'] = Math.floor(Math.random() * 10001);
                 callback(err, connection);
@@ -102,7 +102,7 @@ var def = {
         this.timestamp = r.now();
     },
 
-    createUser: function (newUser, callback) { // takes User constructor
+    createUser: function (newUser, callback) { // takes User
         def.rql(function (err, conn) {
             r.table('users').insert(newUser)
             .run(conn, function (err, result) {
@@ -113,7 +113,53 @@ var def = {
                 };
             })
         })
+    },
+
+    Message: function (initUserName, initUserId, chatId, message) {
+        this.username = initUserName;
+        this.user = initUserId;
+        this.chatId = chatId;
+        this.message = message;
+        this.id = uuid.v4();
+    },
+
+    createMessage: function (message, callback) { // takes Message
+        var rmessage = JSON.stringify(message);
+        def.rds.publish('messages.' + message.chatId, rmessage, function (err, res) {
+            if (err) {
+                callback(err);
+            } else {
+                def.rds.set(message.id, rmessage, function (err, res) {
+                    if (err) {
+                        callback(err);
+                    } else {
+                        message.timestamp = r.now();
+                        l(message);
+                        def.rql(function (err, conn) {
+                            r.table('messages').insert(message).run(conn, function (err, result) {
+                                if (err) {
+                                    callback(err);
+                                } else {
+                                    def.rds.get(message.id, function (err, res) {
+                                        l(res);
+                                    })
+                                    callback(null, result);
+                                };
+                            })
+                        })
+                    };
+                });
+            };
+        });
     }
 }
+
+// db help
+def.rds.on('ready', function () {
+    l.info('redis connected');
+});
+def.rds.on('error', function (err) {
+    l.error('redis error', err);
+});
 
 module.exports = def;
