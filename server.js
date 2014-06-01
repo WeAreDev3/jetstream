@@ -8,6 +8,7 @@ var l = require('./log'),
     swig = require('swig'),
     morgan = require('morgan');
 
+// Use Express's logging middleware
 app.use(morgan('dev'));
 
 // Assign swig.renderFile to all .html files
