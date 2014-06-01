@@ -27,12 +27,12 @@ var def = {
                 l.dbConnError(err);
             } else {
                 connection._id = Math.floor(Math.random() * 10001);
-                callback(err, connection);
+                callback(connection);
             }
         });
     },
     getUserInfo: function(username, callback) {
-        def.rql(function(err, conn) {
+        def.rql(function(conn) {
             r.table('users').getAll(username, {
                 index: 'username'
             }).run(conn, function(err, results) {
@@ -46,7 +46,7 @@ var def = {
         });
     },
     getConversationInfo: function(chatId, callback) {
-        def.rql(function(err, conn) {
+        def.rql(function(conn) {
             r.table('chats').get(chatId)
                 .run(conn, function(err, result) {
                     conn.close();
@@ -59,7 +59,7 @@ var def = {
         });
     },
     getLastMessages: function(chatId, callback) {
-        def.rql(function(err, conn) {
+        def.rql(function(conn) {
             r.table('messages').getAll(chatId, {
                 index: 'chatId'
             }).orderBy(r.desc('timestamp')).limit(20)
@@ -119,8 +119,9 @@ var def = {
         userOb.timezone = timezone;
         userOb.chatList = [];
         userOb.timestamp = r.now();
+        userOb.friends = [];
         return userOb;
-    }
+    },
 
     JetstreamUser: function (usrnm, fname, lname, passwd, slt) {
         this.username = usrnm;
