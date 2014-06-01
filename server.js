@@ -28,7 +28,7 @@ app.use('/', express.static(config.root + '/public/js'));
 require(config.root + '/server/routes')(app);
 
 // db listener
-db.rdsSubscriber.on('pmessage', function (pattern, channel, message) {
+db.rdsSubscriber.on('message', function (channel, message) {
     l('channel: ' + channel);
     l('message: ', JSON.parse(message));
 });

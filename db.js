@@ -10,7 +10,7 @@ var redis = require('redis'),
 
 // def
 var subscriber = createRdsConn();
-subscriber.psubscribe('messages.*');
+subscriber.subscribe('messages');
 
 var def = {
     rds: createRdsConn(),
@@ -35,20 +35,21 @@ var def = {
         def.rql(function(err, conn) {
             r.table('users').getAll(username, {
                 index: 'username'
-            })
-                .run(conn, function(err, results) {
-                    if (err) {
-                        callback(err);
-                    } else {
-                        callback(null, results);
-                    }
-                });
+            }).run(conn, function(err, results) {
+                conn.close();
+                if (err) {
+                    callback(err);
+                } else {
+                    callback(null, results);
+                }
+            });
         });
     },
     getConversationInfo: function(chatId, callback) {
         def.rql(function(err, conn) {
             r.table('chats').get(chatId)
                 .run(conn, function(err, result) {
+                    conn.close();
                     if (err) {
                         callback(err);
                     } else {
@@ -63,6 +64,7 @@ var def = {
                 index: 'chatId'
             }).orderBy(r.desc('timestamp')).limit(20)
                 .run(conn, function(err, results) {
+                    conn.close();
                     if (err) {
                         callback(err);
                     } else {
@@ -73,11 +75,16 @@ var def = {
     },
 
     createChat: function (name, userList, callback) {
-    	var addChatUser = function (userid, chatid) {
+    	var addChatUser = function (userid, chatid, conn) {
     		r.table('users').get(userid).update({
     			list: r.row('list').append(chatid)
     		}).run(conn, function (err, result) {
-    			// body...
+                conn.close();
+    			if (err) {
+                    callback(err);
+                } else {
+                    callback(null, result);
+                };
     		});
     	};
     	def.rql(function (err, conn) {
@@ -86,10 +93,11 @@ var def = {
     			'name': name
     		}).run(conn, function (err, result) {
     			if (err) {
+                    conn.close();
     				callback(err);
     			} else {
     				for (var user in userlist) {
-    					addChatUser(userlist[user], result.generated_keys[0]);
+    					addChatUser(userlist[user], result.generated_keys[0], conn);
     				}
     			}
     		});
@@ -109,6 +117,7 @@ var def = {
         def.rql(function (err, conn) {
             r.table('users').insert(newUser)
             .run(conn, function (err, result) {
+                conn.close();
                 if (err) {
                     callback(err);
                 } else {
@@ -128,17 +137,20 @@ var def = {
 
     createMessage: function (message, callback) { // takes Message
         var rmessage = JSON.stringify(message);
-        def.rds.publish('messages.' + message.chatId, rmessage, function (err, res) {
+        def.rds.publish('messages', rmessage, function (err, res) {
             if (err) {
                 callback(err);
+                conn.close();
             } else {
                 def.rds.set(message.id, rmessage, function (err, res) {
                     if (err) {
                         callback(err);
+                        conn.close();
                     } else {
                         message.timestamp = r.now();
                         def.rql(function (err, conn) {
                             r.table('messages').insert(message).run(conn, function (err, result) {
+                                conn.close();
                                 if (err) {
                                     callback(err);
                                 } else {
