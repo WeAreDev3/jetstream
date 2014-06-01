@@ -67,7 +67,7 @@ gulp.task('clean', function () {
     return gulp.src(dirs.build).pipe(clean());
 });
 
-gulp.task('default', ['clean', 'css', 'hint', 'js'], function () {
+gulp.task('default', ['css', 'hint', 'js'], function () {
 
     gulp.watch(files.sass, ['css']); // When sass files are changed run 'css'
     gulp.watch(files.allJS, ['hint', 'js']); // When all js files as changed run 'js'
