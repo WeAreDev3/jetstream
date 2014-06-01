@@ -1,10 +1,32 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>{{title}}</title>
-        <link rel="stylesheet" type="text/css" href="css/main.css">
-    </head>
-    <body>
-        <script type="text/javascript" src="jetstream.min.js"></script>
-    </body>
+<head>
+    <title>{{appName}} - Home</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+
+<body>
+    <div id="signinButton">
+      <span class="g-signin"
+        data-scope="profile"
+        data-clientid="1597733950-19qdccarm1fo5ojrde7cemhgrufk9ef7.apps.googleusercontent.com"
+        data-redirecturi="postmessage"
+        data-accesstype="online"
+        data-cookiepolicy="single_host_origin"
+        data-callback="signinCallback">
+      </span>
+    </div>
+    <div id="result"></div>
+    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript">
+    (function() {
+        var po = document.createElement('script');
+        po.type = 'text/javascript';
+        po.async = true;
+        po.src = 'https://apis.google.com/js/client:plusone.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(po, s);
+    })();
+    </script>
+</body>
 </html>

@@ -7,10 +7,18 @@ var l = require('./log'),
     app = express(),
     swig = require('swig'),
     morgan = require('morgan'),
-    GooglePlusStrategy = require('passport-google-plus');
+    bodyParser = require('body-parser');
 
-// Use Express's logging middleware
+// Define public folders for our web app
+app.use(express.static(config.root + '/public'));
+app.use(express.static(config.root + '/public/css'));
+app.use(express.static(config.root + '/public/js'));
+
+// Log every request
 app.use(morgan('dev'));
+
+// Parse information from POSTs
+app.use(bodyParser());
 
 // Assign swig.renderFile to all .html files
 app.engine('html', swig.renderFile);
@@ -19,10 +27,8 @@ app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.set('views', config.root + '/server/views');
 
-// Define public folders for our web app
-app.use('/', express.static(config.root + '/public'));
-app.use('/', express.static(config.root + '/public/css'));
-app.use('/', express.static(config.root + '/public/js'));
+// Setup Passport
+require('./passport')(app);
 
 // Run our router module to prepare for incoming requests
 require(config.root + '/server/routes')(app);
