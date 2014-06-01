@@ -10,7 +10,8 @@ var l = require('./log'),
     bodyParser = require('body-parser'),
     passport = require('passport'),
     cookieParser = require('cookie-parser'),
-    session = require('express-session');
+    session = require('express-session'),
+    val = require('./val');
 
 // Define public folders for our web app
 app.use(express.static(config.root + '/public'));
@@ -47,7 +48,7 @@ require(config.root + '/server/routes')(app, passport);
 // db listener
 db.rdsSubscriber.on('message', function(channel, message) {
     l('channel: ' + channel);
-    l('message: ', JSON.parse(message));
+    l('message: ', db.redisStringToObject(message));
 });
 
 // Open the ports for business

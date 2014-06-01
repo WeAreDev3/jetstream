@@ -9,14 +9,14 @@ function ensureAuthenticated(req, res, next) {
         req.authClient.credentials = req.session.googleCredentials;
         return next();
     }
-    res.redirect('/signin')
+    res.redirect('/signin');
 }
 
 module.exports = function(app, passport) {
     // The homepage
     app.route('/').get(ensureAuthenticated, function(req, res) {
         res.render('index', {
-            title: config.appName,
+            title: config.appName + ' - Home',
             appName: config.appName
         });
     });
@@ -30,6 +30,13 @@ module.exports = function(app, passport) {
     app.route('/signin').get(function(req, res) {
         res.render('signin', {
             title: config.appName + ' - Sign In',
+            appName: config.appName
+        });
+    });
+
+    app.route('/app').get(function(req, res) {
+        res.render('app', {
+            title: config.appName,
             appName: config.appName
         });
     });
