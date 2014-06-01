@@ -84,7 +84,7 @@ var def = {
                     callback(err);
                 } else {
                     callback(null, result);
-                };
+                }
     		});
     	};
     	def.rql(function (err, conn) {
