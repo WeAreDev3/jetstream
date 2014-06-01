@@ -34,12 +34,12 @@ function setUpTable (tbl, conn) {
                 l.setupSuccess(result, 'TBL: ' + tbl);
             }
             for (var index in config.rethinkdb.tables[tbl]) {
-                setUpIndex(index, conn);
+                setUpIndex(index, conn, tbl);
             }
         });
 }
 
-function setUpIndex (inx, conn) {
+function setUpIndex (inx, conn, tbl) {
     r.table(tbl)
         .indexCreate(config.rethinkdb.tables[tbl][inx])
         .run(conn, function(err, result) {
