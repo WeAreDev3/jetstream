@@ -77,7 +77,7 @@ var def = {
     createChat: function (name, userList, callback) {
     	var addChatUser = function (userid, chatid, conn) {
     		r.table('users').get(userid).update({
-    			list: r.row('list').append(chatid)
+    			chatList: r.row('chatList').append(chatid)
     		}).run(conn, function (err, result) {
                 conn.close();
     			if (err) {
@@ -90,7 +90,8 @@ var def = {
     	def.rql(function (err, conn) {
     		r.table('chats').insert({
     			'users': userlist,
-    			'name': name
+    			'name': name,
+                'timestamp': r.now()
     		}).run(conn, function (err, result) {
     			if (err) {
                     conn.close();
@@ -104,16 +105,33 @@ var def = {
     	});
     },
 
-    User: function (username, email, password, fname, lname) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.firstName = fname;
-        this.lastName = lname;
-        this.timestamp = r.now();
+    GoogUser: function (id, name, imgUrl, profUrl) {
+        this.googId = id;
+        this.googName = name;
+        this.googImgUrl = imgUrl;
+        this.googProfUrl = profUrl;
     },
 
-    createUser: function (newUser, callback) { // takes User
+    User: function (userOb, gender, language, timezone) {
+        // takes either the GoogUser or JetstreamUser. init only
+        userOb.gender = gender;
+        userOb.language = language;
+        userOb.timezone = timezone;
+        userOb.chatList = [];
+        userOb.timestamp = r.now();
+        return userOb;
+    }
+
+    JetstreamUser: function (usrnm, fname, lname, passwd, slt) {
+        this.username = usrnm;
+        this.firstName = fname;
+        this.lastName = lname;
+        this.password = passwd;
+        this.salt = slt;
+    },
+
+    createUser: function (newUser, callback) {
+        // Takes User ONLY
         def.rql(function (err, conn) {
             r.table('users').insert(newUser)
             .run(conn, function (err, result) {
@@ -136,7 +154,10 @@ var def = {
     },
 
     createMessage: function (message, callback) { // takes Message
-        var rmessage = JSON.stringify(message);
+        var rmessage = message;
+        rmessage.timestamp = new Date();
+        rmessage.timestamp = rmessage.timestamp.toString();
+        rmessage = JSON.stringify(rmessage);
         def.rds.publish('messages', rmessage, function (err, res) {
             if (err) {
                 callback(err);
@@ -162,6 +183,12 @@ var def = {
                 });
             }
         });
+    },
+
+    redisStringToObject: function (string) {
+        ob = JSON.parse(string);
+        ob.timestamp = new Date(ob.timestamp);
+        return ob;
     }
 };
 

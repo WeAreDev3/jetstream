@@ -7,7 +7,8 @@ var l = require('./log'),
     app = express(),
     swig = require('swig'),
     morgan = require('morgan'),
-    bodyParser = require('body-parser');
+    bodyParser = require('body-parser'),
+    val = require('./val');
 
 // Define public folders for our web app
 app.use(express.static(config.root + '/public'));
@@ -36,7 +37,7 @@ require(config.root + '/server/routes')(app);
 // db listener
 db.rdsSubscriber.on('message', function (channel, message) {
     l('channel: ' + channel);
-    l('message: ', JSON.parse(message));
+    l('message: ', db.redisStringToObject(message));
 });
 
 // Open the ports for business
