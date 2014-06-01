@@ -5,20 +5,10 @@ function parseDate (date) {
 }
 
 function parseTime (date) {
-    var ampm = "AM";
     var hour = date.getHours();
     var minutes = date.getMinutes();
 
-    if (hour > 11) {
-        ampm = "PM";
-        if (hour > 12) {
-            hour = hour - 12;
-        };
-    };
+    if (minutes < 10) minutes = '0' + minutes;
 
-    if (minutes < 10) {
-        minutes = "0" + minutes;
-    };
-
-    return hour + ":" + minutes + " " + ampm;
+    return hour > 11 ? (hour > 12 ? hour - 12 : hour) + ':' + minutes + ' PM' : hour + ':' + minutes + ' AM';
 }
