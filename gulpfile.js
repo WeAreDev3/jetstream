@@ -1,11 +1,12 @@
 // File includes
+console.time('Gulp Initialization Time');
 var fs = require('fs'), // File system module (built-in)
     path = require('path'), // Path module (built-in)
     es = require('event-stream'), // Event Stream modification utility
+    sequence = require('run-sequence'), // Enable sequencing of tasks
 
     // Gulp + Plugins
     gulp = require('gulp'), // The main gulp module
-    util = require('gulp-util'), // gulp utilities
     sass = require('gulp-sass'), // Compile SASS files
     nodemon = require('gulp-nodemon'), // Start nodemon w/ gulp
     rename = require('gulp-rename'), // Rename piped files
@@ -14,12 +15,13 @@ var fs = require('fs'), // File system module (built-in)
     concat = require('gulp-concat'), // Concatenate files together
     uglify = require('gulp-uglifyjs'), // UglifyJS piped files
     clean = require('gulp-clean'),
+    install = require('gulp-install'),
 
     // Directories and files, for easy access
     files = {
-        'sass': './server/stylesheets/**.scss',
+        'sass': './server/stylesheets/**/*.scss',
         'js': './server/js/**/*.js',
-        'allJS': ['**/*.js', '!node_modules/**', '!public/**']
+        'allJS': ['*.js', 'server/**/*.js']
     }, dirs = {
         'build': './public',
         'js': './server/js'
@@ -67,8 +69,12 @@ gulp.task('clean', function () {
     return gulp.src(dirs.build).pipe(clean());
 });
 
-gulp.task('default', ['css', 'hint', 'js'], function () {
+gulp.task('install', function () {
+    return gulp.src('./package.json')
+        .pipe(install());
+});
 
+gulp.task('watch', function () {
     gulp.watch(files.sass, ['css']); // When sass files are changed run 'css'
     gulp.watch(files.allJS, ['hint', 'js']); // When all js files as changed run 'js'
     nodemon({
@@ -76,4 +82,9 @@ gulp.task('default', ['css', 'hint', 'js'], function () {
         'ext': 'js,html',
         'ignore': ['public/**', 'node_modules/**', files.js]
     });
+    console.timeEnd('Gulp Initialization Time');
+});
+
+gulp.task('default', function () {
+    sequence('clean', ['install', 'css', 'hint', 'js'], 'watch');
 });
