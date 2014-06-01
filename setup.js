@@ -20,12 +20,12 @@ db.rql(function(err, conn) {
             	l.setupSuccess(result, 'DB: ' + config.rethinkdb.db);
             }
             for (var table in config.rethinkdb.tables) {
-                setUpTable(table);
+                setUpTable(table, conn);
             }
         });
 });
 
-function setUpTable (tbl) {
+function setUpTable (tbl, conn) {
     r.tableCreate(tbl)
         .run(conn, function(err, result) {
             if (err) {
@@ -34,12 +34,12 @@ function setUpTable (tbl) {
                 l.setupSuccess(result, 'TBL: ' + tbl);
             }
             for (var index in config.rethinkdb.tables[tbl]) {
-                setUpIndex(index);
+                setUpIndex(index, conn);
             }
         });
 }
 
-function setUpIndex (inx) {
+function setUpIndex (inx, conn) {
     r.table(tbl)
         .indexCreate(config.rethinkdb.tables[tbl][inx])
         .run(conn, function(err, result) {
