@@ -9,10 +9,13 @@ var redis = require('redis'),
 
 
 // def
+var subscriber = createRdsConn();
+subscriber.psubscribe('messages.*');
+
 var def = {
-    rds: redis.createClient(config.redis.port, config.redis.host, {
-        auth_pass: config.redis.password
-    }),
+    rds: createRdsConn(),
+
+    rdsSubscriber: subscriber,
 
     rql: function(callback) {
         r.connect({
@@ -134,15 +137,11 @@ var def = {
                         callback(err);
                     } else {
                         message.timestamp = r.now();
-                        l(message);
                         def.rql(function (err, conn) {
                             r.table('messages').insert(message).run(conn, function (err, result) {
                                 if (err) {
                                     callback(err);
                                 } else {
-                                    def.rds.get(message.id, function (err, res) {
-                                        l(res);
-                                    });
                                     callback(null, result);
                                 }
                             });
@@ -154,7 +153,13 @@ var def = {
     }
 };
 
-// db help
+// helpers
+function createRdsConn () {
+    var conn =  redis.createClient(config.redis.port, config.redis.host, {
+        auth_pass: config.redis.password
+    });
+    return conn;
+}
 def.rds.on('ready', function () {
     l.info('redis connected');
 });
