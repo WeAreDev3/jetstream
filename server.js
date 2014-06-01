@@ -6,7 +6,8 @@ var l = require('./log'),
     express = require('express'),
     app = express(),
     swig = require('swig'),
-    morgan = require('morgan');
+    morgan = require('morgan'),
+    GooglePlusStrategy = require('passport-google-plus');
 
 app.use(morgan('dev'));
 
