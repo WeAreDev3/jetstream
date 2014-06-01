@@ -6,9 +6,17 @@ var l = require('./log'),
     express = require('express'),
     app = express(),
     swig = require('swig'),
-    morgan = require('morgan');
+    morgan = require('morgan'),
+    bodyParser = require('body-parser');
 
+// Define public folders for our web app
+app.use('/', express.static(config.root + '/public'));
+
+// Log every request
 app.use(morgan('dev'));
+
+// Parse information from POSTs
+app.use(bodyParser());
 
 // Assign swig.renderFile to all .html files
 app.engine('html', swig.renderFile);
@@ -17,8 +25,8 @@ app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.set('views', config.root + '/server/views');
 
-// Define public folders for our web app
-app.use('/', express.static(config.root + '/public'));
+// Setup Passport
+require('./passport')(app);
 
 // Run our router module to prepare for incoming requests
 require(config.root + '/server/routes')(app);
