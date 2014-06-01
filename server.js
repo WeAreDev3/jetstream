@@ -9,6 +9,7 @@ var l = require('./log'),
     morgan = require('morgan'),
     GooglePlusStrategy = require('passport-google-plus');
 
+// Use Express's logging middleware
 app.use(morgan('dev'));
 
 // Assign swig.renderFile to all .html files

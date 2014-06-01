@@ -26,7 +26,7 @@ var def = {
             if (err) {
                 l.dbConnError(err);
             } else {
-                connection['_id'] = Math.floor(Math.random() * 10001);
+                connection._id = Math.floor(Math.random() * 10001);
                 callback(err, connection);
             }
         });
@@ -89,7 +89,7 @@ var def = {
     				callback(err);
     			} else {
     				for (var user in userlist) {
-    					addChatUser(userlist[user], result["generated_keys"][0]);
+    					addChatUser(userlist[user], result.generated_keys[0]);
     				}
     			}
     		});
