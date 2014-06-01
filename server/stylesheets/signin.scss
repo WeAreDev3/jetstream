@@ -1,0 +1,60 @@
+@import 'mixins';
+
+$google-color: #D34836;
+$light-gray: #F9F9F9;
+
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+.signin {
+    margin: 150px auto 0;
+    width: 330px;
+    height: 350px;
+    background: $light-gray;
+    border: 1px solid #E0E0E0;
+    text-align: center;
+    @include user-select(none);
+
+    h1 {
+        font-family: 'Grand Hotel', serif;
+        text-transform: lowercase;
+        font-size: 60px;
+        font-weight: normal;
+        cursor: default;
+        margin-bottom: 0;
+    }
+
+    h2 {
+        font-weight: normal;
+        font-family: 'Open Sans', sans-serif;
+        color: #666666;
+        font-variant: small-caps;
+        margin-top: 0;
+        margin-bottom: 60px;
+    }
+
+    button {
+        background-color: $google-color;
+        border: none;
+        padding: 10px;
+        font: 15px 'Open Sans';
+        color: $light-gray;
+        outline: none;
+        border: 1px solid darken($google-color, 10%);
+        cursor: pointer;
+        transition: .15s;
+
+        &:hover {
+            background-color: lighten($google-color, 5%);
+        }
+
+        &:active {
+            background-color: darken($google-color, 5%);
+        }
+    }
+}

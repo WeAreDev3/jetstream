@@ -9,8 +9,16 @@ module.exports = function(app) {
         });
     });
 
+    // Google+ authentication
     app.route('/auth/google/callback').post(function(req, res) {
         console.log(req.body);
+    });
+
+    app.route('/signin').get(function (req, res) {
+        res.render('signin', {
+            title: config.appName + ' - Sign In',
+            appName: config.appName
+        });
     });
     
     // A catch-all (i.e. 404)
