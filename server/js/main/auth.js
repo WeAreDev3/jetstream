@@ -11,4 +11,4 @@ function signinCallback(authResult) {
     } else if (authResult.error) {
         console.log('There was an error: ' + authResult.error);
     }
-};
+}
