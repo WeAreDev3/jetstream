@@ -1,31 +1,20 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>{{title}}</title>
+    <title>{{appName}} - Home</title>
+
+    <meta name="google-signin-clientid" content="1597733950-19qdccarm1fo5ojrde7cemhgrufk9ef7.apps.googleusercontent.com">
+    <meta name="google-signin-scope" content="profile">
+    <meta name="google-signin-cookiepolicy" content="single_host_origin">
+
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/signin.css">
 </head>
 
 <body>
-    <div id="signinButton">
-      <span class="g-signin"
-        data-scope="profile"
-        data-clientid="1597733950-19qdccarm1fo5ojrde7cemhgrufk9ef7.apps.googleusercontent.com"
-        data-redirecturi="postmessage"
-        data-accesstype="online"
-        data-cookiepolicy="single_host_origin"
-        data-callback="signinCallback">
-      </span>
-    </div>
-    <script type="text/javascript" src="main.js"></script>
-    <script type="text/javascript">
-    (function() {
-        var po = document.createElement('script');
-        po.type = 'text/javascript';
-        po.async = true;
-        po.src = 'https://apis.google.com/js/client:plusone.js';
-        var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(po, s);
-    })();
-    </script>
+    <div id="signinButton">Sign in with Google+</div>
+    <script type="text/javascript" src="js/signin.js"></script>
 </body>
+
 </html>
