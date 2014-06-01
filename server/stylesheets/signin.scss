@@ -18,6 +18,7 @@ body {
     background: $light-gray;
     border: 1px solid #E0E0E0;
     text-align: center;
+    cursor: default;
     position: absolute;
     top: 0;
     left: 0;
@@ -30,7 +31,6 @@ body {
         text-transform: lowercase;
         font-size: 60px;
         font-weight: normal;
-        cursor: default;
         margin-bottom: 0;
     }
 
@@ -64,10 +64,16 @@ body {
     }
 }
 
-@media screen and (min-width: $sign-in-width) and (min-height: (500px)) {
+@media screen and (min-width: $sign-in-width) and (min-height: 500px) {
     .signin {
-        margin: 150px auto 0;
+        margin: 50px auto 0;
         width: $sign-in-width;
         height: $sign-in-height;
+    }
+}
+
+@media screen and (min-width: $sign-in-width) and (min-height: 800px) {
+    .signin {
+        margin: 150px auto 0;
     }
 }
