@@ -5,12 +5,14 @@ body {
   margin: 0; }
 
 .signin {
-  margin: 150px auto 0;
-  width: 330px;
-  height: 350px;
   background: #F9F9F9;
   border: 1px solid #E0E0E0;
   text-align: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   -webkit-user-select: none;
   /* Chrome/Safari */
   -moz-user-select: none;
@@ -46,3 +48,9 @@ body {
       background-color: #d8594b; }
     .signin button:active {
       background-color: #c43a2b; }
+
+@media screen and (min-width: 330px) and (min-height: 500px) {
+  .signin {
+    margin: 150px auto 0;
+    width: 330px;
+    height: 350px; } }
