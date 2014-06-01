@@ -3,6 +3,9 @@
 $google-color: #D34836;
 $light-gray: #F9F9F9;
 
+$sign-in-width: 330px;
+$sign-in-height: 350px;
+
 *, *:before, *:after {
     box-sizing: border-box;
 }
@@ -12,12 +15,15 @@ body {
 }
 
 .signin {
-    margin: 150px auto 0;
-    width: 330px;
-    height: 350px;
     background: $light-gray;
     border: 1px solid #E0E0E0;
     text-align: center;
+    cursor: default;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     @include user-select(none);
 
     h1 {
@@ -25,7 +31,6 @@ body {
         text-transform: lowercase;
         font-size: 60px;
         font-weight: normal;
-        cursor: default;
         margin-bottom: 0;
     }
 
@@ -56,5 +61,19 @@ body {
         &:active {
             background-color: darken($google-color, 5%);
         }
+    }
+}
+
+@media screen and (min-width: $sign-in-width) and (min-height: 500px) {
+    .signin {
+        margin: 50px auto 0;
+        width: $sign-in-width;
+        height: $sign-in-height;
+    }
+}
+
+@media screen and (min-width: $sign-in-width) and (min-height: 800px) {
+    .signin {
+        margin: 150px auto 0;
     }
 }
