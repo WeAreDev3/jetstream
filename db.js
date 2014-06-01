@@ -181,6 +181,6 @@ def.rds.on('error', function (err) {
 
 def.rdsSubscriber.on('error', function (err) {
     l.error('redis subscriber error', err);
-})
+});
 
 module.exports = def;
