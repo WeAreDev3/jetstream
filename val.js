@@ -57,7 +57,7 @@ var def = {
                     }
                 }
                 callback(blackList);
-            }
+            };
         for (var i = 0; i < userList.length; i++) {
             getUsersFriends(userList[i], i === userList.length - 1);
         }
