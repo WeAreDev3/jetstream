@@ -28,7 +28,6 @@ var fs = require('fs'), // File system module (built-in)
 // The CSS task
 gulp.task('css', function () {
     return gulp.src(files.sass)
-        .pipe(changed(dirs.build + '/css')) // Filter out unchanged files
         .pipe(sass()) // Compile SASS to CSS
         .pipe(gulp.dest(dirs.build + '/css')); // Write to disk
 });

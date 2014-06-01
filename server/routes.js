@@ -8,6 +8,13 @@ module.exports = function(app) {
             appName: config.appName
         });
     });
+
+    app.route('/signin').get(function (req, res) {
+        res.render('signin', {
+            title: config.appName + ' - Sign In',
+            appName: config.appName
+        })
+    });
     
     // A catch-all (i.e. 404)
     app.route('*').all(function (req, res) {
