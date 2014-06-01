@@ -20,6 +20,13 @@ module.exports = function(app) {
             appName: config.appName
         });
     });
+
+    app.route('/app').get(function (req, res) {
+        res.render('app', {
+            title: config.appName,
+            appName: config.appName
+        });
+    });
     
     // A catch-all (i.e. 404)
     app.route('*').all(function (req, res) {

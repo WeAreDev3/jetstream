@@ -18,8 +18,8 @@ var fs = require('fs'), // File system module (built-in)
     // Directories and files, for easy access
     files = {
         'sass': './server/stylesheets/**.scss',
-        'js': './server/js/**.js',
-        'allJS': ['**.js', '!node_modules/**', '!public/**']
+        'js': './server/js/**/*.js',
+        'allJS': ['**/*.js', '!node_modules/**', '!public/**']
     }, dirs = {
         'build': './public',
         'js': './server/js'
