@@ -8,6 +8,10 @@ module.exports = function(app) {
             appName: config.appName
         });
     });
+
+    app.route('/auth/google/callback').post(function(req, res) {
+        console.log(req.body);
+    });
     
     // A catch-all (i.e. 404)
     app.route('*').all(function (req, res) {
