@@ -22,8 +22,7 @@ var def = {
         });
     },
     areFriends: function (userList, callback) {
-        /*
-            passes an object with properties being the 
+        /*  passes an object with properties being the 
             Id's of each user and the value being a list
             of users that they are not friends with
         */
@@ -57,7 +56,7 @@ var def = {
                     }
                 }
                 callback(blackList);
-            }
+            };
         for (var i = 0; i < userList.length; i++) {
             getUsersFriends(userList[i], i === userList.length - 1);
         }
