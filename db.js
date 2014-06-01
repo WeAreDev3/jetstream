@@ -120,7 +120,7 @@ var def = {
         userOb.chatList = [];
         userOb.timestamp = r.now();
         return userOb;
-    }
+    },
 
     JetstreamUser: function (usrnm, fname, lname, passwd, slt) {
         this.username = usrnm;
