@@ -13,7 +13,7 @@ var fs = require('fs'), // File system module (built-in)
     stylish = require('jshint-stylish'), // Make JSHint look better
     concat = require('gulp-concat'), // Concatenate files together
     uglify = require('gulp-uglifyjs'), // UglifyJS piped files
-    changed = require('gulp-changed'), // Filters out the unchanged files
+    clean = require('gulp-clean'),
 
     // Directories and files, for easy access
     files = {
@@ -48,10 +48,10 @@ gulp.task('js', function() {
     return es.concat.apply(null, getFolders(dirs.js).map(function(folder) {
         return gulp.src(path.join(dirs.js, folder, '/*.js'))
             .pipe(concat(folder + '.js')) // Concatenate all files
-            .pipe(gulp.dest(dirs.build)) // Write to disk
+            .pipe(gulp.dest(dirs.build + '/js')) // Write to disk
             .pipe(uglify()) // Uglify the file
             .pipe(rename(folder + '.min.js')) // Add .min to the filename
-            .pipe(gulp.dest(dirs.build)); // Write to disk
+            .pipe(gulp.dest(dirs.build + '/js')); // Write to disk
     }));
 });
 
@@ -62,7 +62,13 @@ gulp.task('hint', function () {
         .pipe(jshint.reporter('jshint-stylish')); // Use the stylish output
 });
 
-gulp.task('default', ['css', 'hint', 'js'], function () {
+// The Build Cleaner
+gulp.task('clean', function () {
+    return gulp.src(dirs.build).pipe(clean());
+});
+
+gulp.task('default', ['clean', 'css', 'hint', 'js'], function () {
+
     gulp.watch(files.sass, ['css']); // When sass files are changed run 'css'
     gulp.watch(files.allJS, ['hint', 'js']); // When all js files as changed run 'js'
     nodemon({
