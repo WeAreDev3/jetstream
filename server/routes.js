@@ -38,7 +38,8 @@ module.exports = function(app, passport) {
     app.route('/app').get(ensureAuthenticated, function(req, res) {
         res.render('app', {
             title: config.appName,
-            appName: config.appName
+            appName: config.appName,
+            user: req.user
         });
     });
 
