@@ -58,7 +58,10 @@ db.rdsSubscriber.on('message', function(channel, message) {
 
 // socket.io
 io.on('connection', function(socket) {
-    l.info('Client connected');
+    l.info('User connected:', socket.id);
+    socket.on('disconnect', function() {
+        l('User disconnected:', socket.id);
+    });
 });
 
 // Open the ports for business
