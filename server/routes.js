@@ -25,7 +25,7 @@ module.exports = function(app, passport) {
     // Google+ authentication
     app.route(config.auth.callback).get(passport.authenticate('google'), function(req, res) {
         req.session.googleCredentials = req.authInfo;
-        res.redirect('/');
+        res.redirect('/app');
     });
 
     app.route('/signin').get(function(req, res) {
