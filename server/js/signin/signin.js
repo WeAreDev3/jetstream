@@ -13,6 +13,7 @@ function signinCallback(authResult) {
         console.log('Login successful!');
         window.location = '/auth/callback?code=' + encodeURIComponent(authResult.code);
     } else if (authResult.error) {
+        // "immediate_failed" means could not immediately sign in
         console.log('There was an error: ' + authResult.error);
     }
 }
