@@ -11,12 +11,13 @@ function signinCallback(authResult) {
     console.log(authResult);
     if (authResult.code) {
         console.log('Login successful!');
-        var request = new XMLHttpRequest();
-        request.open('POST', '/auth/google/callback', true);
-        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        request.send(JSON.stringify({
-            code: authResult.code
-        }));
+        window.location = '/auth/callback?code=' + encodeURIComponent(authResult.code);
+        // var request = new XMLHttpRequest();
+        // request.open('POST', '/auth/callback', true);
+        // request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        // request.send(JSON.stringify({
+        //     code: authResult.code
+        // }));
     } else if (authResult.error) {
         console.log('There was an error: ' + authResult.error);
     }
