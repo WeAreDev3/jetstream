@@ -31,11 +31,10 @@ var def = {
             }
         });
     },
-    getUserInfo: function(username, callback) {
+    getUserInfo: function(userid, callback) {
         def.rql(function(conn) {
-            r.table('users').getAll(username, {
-                index: 'username'
-            }).run(conn, function(err, results) {
+            r.table('users').get(userid)
+            .run(conn, function(err, results) {
                 conn.close();
                 if (err) {
                     callback(err);
@@ -48,14 +47,14 @@ var def = {
     getConversationInfo: function(chatId, callback) {
         def.rql(function(conn) {
             r.table('chats').get(chatId)
-                .run(conn, function(err, result) {
-                    conn.close();
-                    if (err) {
-                        callback(err);
-                    } else {
-                        callback(null, result);
-                    }
-                });
+            .run(conn, function(err, result) {
+                conn.close();
+                if (err) {
+                    callback(err);
+                } else {
+                    callback(null, result);
+                }
+            });
         });
     },
     getLastMessages: function(chatId, callback) {
@@ -63,14 +62,14 @@ var def = {
             r.table('messages').getAll(chatId, {
                 index: 'chatId'
             }).orderBy(r.desc('timestamp')).limit(20)
-                .run(conn, function(err, results) {
-                    conn.close();
-                    if (err) {
-                        callback(err);
-                    } else {
-                        callback(null, results);
-                    }
-                });
+            .run(conn, function(err, results) {
+                conn.close();
+                if (err) {
+                    callback(err);
+                } else {
+                    callback(null, results);
+                }
+            });
         });
     },
 
