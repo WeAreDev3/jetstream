@@ -2,7 +2,7 @@
 var express = require('express'),
     app = express(),
     http = require('http'),
-    server = http.Server(app);
+    server = http.Server(app),
     config = require('./config'),
     db = require('./db'),
     val = require('./val'),
