@@ -20,7 +20,7 @@ var fs = require('fs'), // File system module (built-in)
     // Directories and files, for easy access
     files = {
         'sass': './server/stylesheets/**/*.scss',
-        'js': './server/js/**/*.js',
+        'js': './server/**/*.js',
         'allJS': ['*.js', 'server/**/*.js']
     }, dirs = {
         'build': './public',
@@ -80,7 +80,7 @@ gulp.task('watch', function () {
     nodemon({
         'script': 'server.js',
         'ext': 'js,html',
-        'ignore': ['public/**', 'node_modules/**', files.js]
+        'ignore': ['public/**', 'node_modules/**', 'server/*/**']
     });
     console.timeEnd('Gulp Initialization Time');
 });
