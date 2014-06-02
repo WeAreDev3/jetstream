@@ -1,17 +1,17 @@
 // Define all of the modules needed in the file
-var l = require('./log'),
-    io = require('socket.io'),
-    db = require('./db'),
-    config = require('./config'),
-    express = require('express'),
+var express = require('express'),
     app = express(),
+    config = require('./config'),
+    db = require('./db'),
+    val = require('./val'),
+    l = require('./log'),
     swig = require('swig'),
+    io = require('socket.io'),
+    passport = require('passport'),
     morgan = require('morgan'),
     bodyParser = require('body-parser'),
-    passport = require('passport'),
     cookieParser = require('cookie-parser'),
-    session = require('express-session'),
-    val = require('./val');
+    session = require('express-session');
 
 // Define public folders for our web app
 app.use(express.static(config.root + '/public'));
@@ -21,7 +21,7 @@ app.use(express.static(config.root + '/public/js'));
 // Log every request
 app.use(morgan('dev'));
 
-// Parse information from POSTs
+// Set express to use cookies/sesions and parse POSTs
 app.use(cookieParser());
 app.use(bodyParser());
 app.use(session({
@@ -35,7 +35,7 @@ app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.set('views', config.root + '/server/views');
 
-// Init Passport
+// Init Passport and set it to use sessions
 app.use(passport.initialize());
 app.use(passport.session());
 
