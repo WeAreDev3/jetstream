@@ -133,7 +133,7 @@ var def = {
 
     createUser: function (newUser, callback) {
         // Takes User ONLY
-        def.rql(function (err, conn) {
+        def.rql(function (conn) {
             r.table('users').insert(newUser)
             .run(conn, function (err, result) {
                 conn.close();

@@ -11,7 +11,7 @@ var r = require('rethinkdb'),
 var i = 0,
     j = 0;
 // sets up server
-db.rql(function(err, conn) {
+db.rql(function(conn) {
     r.dbCreate(config.rethinkdb.db)
         .run(conn, function(err, result) {
             if (err) {
