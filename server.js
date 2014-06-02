@@ -1,12 +1,16 @@
-// Define all of the modules needed in the file
+// Sever modules
 var express = require('express'),
     app = express(),
     server = require('http').createServer(app),
     io = require('socket.io')(server),
+
+    // Local modules
     config = require('./config'),
     db = require('./db'),
     val = require('./val'),
     l = require('./log'),
+
+    // Middleware/template/helper modules
     swig = require('swig'),
     passport = require('passport'),
     morgan = require('morgan'),
@@ -52,6 +56,7 @@ db.rdsSubscriber.on('message', function(channel, message) {
     l('message: ', db.redisStringToObject(message));
 });
 
+// socket.io
 io.on('connection', function(socket) {
     l.info('Client connected');
 });
