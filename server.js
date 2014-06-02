@@ -1,7 +1,7 @@
 // Sever modules
 var express = require('express'),
     app = express(),
-    server = require('http').createServer(app),
+    server = require('http').Server(app),
     io = require('socket.io')(server),
 
     // Local modules
@@ -58,7 +58,7 @@ db.rdsSubscriber.on('message', function(channel, message) {
 
 // socket.io
 io.on('connection', function(socket) {
-    l.info('User connected:', socket.id);
+    l('User connected:', socket.id);
     socket.on('disconnect', function() {
         l('User disconnected:', socket.id);
     });
