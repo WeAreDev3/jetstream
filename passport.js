@@ -1,5 +1,6 @@
-var l = require('./log'),
-    GooglePlusStrategy = require('passport-google-plus');
+var GooglePlusStrategy = require('passport-google-plus'),
+    l = require('./log'),
+    config = require('./config');
 
 module.exports = function(app, passport) {
     passport.serializeUser(function(user, done) {
@@ -11,8 +12,8 @@ module.exports = function(app, passport) {
     });
 
     passport.use(new GooglePlusStrategy({
-            clientId: '1597733950-19qdccarm1fo5ojrde7cemhgrufk9ef7.apps.googleusercontent.com',
-            clientSecret: 'nAywumuXoegASLWuIV45RBWz'
+            clientId: config.auth.clientId,
+            clientSecret: config.auth.clientSecret
         },
         function(tokens, profile, done) {
             l(profile.displayName, 'signed in!');
