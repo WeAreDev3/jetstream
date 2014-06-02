@@ -1,12 +1,15 @@
 // Define all of the modules needed in the file
 var express = require('express'),
     app = express(),
+    http = require('http'),
+    server = http.Server(app);
     config = require('./config'),
     db = require('./db'),
     val = require('./val'),
     l = require('./log'),
     swig = require('swig'),
     io = require('socket.io'),
+    io = io(server),
     passport = require('passport'),
     morgan = require('morgan'),
     bodyParser = require('body-parser'),
@@ -49,6 +52,11 @@ require(config.root + '/server/routes')(app, passport);
 db.rdsSubscriber.on('message', function(channel, message) {
     l('channel: ' + channel);
     l('message: ', db.redisStringToObject(message));
+});
+
+// socket.io
+io.on('connection', function (socket) {
+    l(socket);
 });
 
 // Open the ports for business
