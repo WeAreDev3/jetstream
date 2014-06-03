@@ -1,3 +1,8 @@
+/*
+TODO:
+1. Add autoprefixer plugin
+*/
+
 // File includes
 console.time('Gulp Initialization Time');
 var fs = require('fs'), // File system module (built-in)
@@ -16,6 +21,8 @@ var fs = require('fs'), // File system module (built-in)
     uglify = require('gulp-uglifyjs'), // UglifyJS piped files
     clean = require('gulp-clean'),
     install = require('gulp-install'),
+    notify = require('gulp-notify'),
+    livereload = require('gulp-livereload'),
 
     // Directories and files, for easy access
     files = {
@@ -30,8 +37,15 @@ var fs = require('fs'), // File system module (built-in)
 // The CSS task
 gulp.task('css', function () {
     return gulp.src(files.sass)
-        .pipe(sass()) // Compile SASS to CSS
-        .pipe(gulp.dest(dirs.build + '/css')); // Write to disk
+        .pipe(sass({
+            style: 'compressed',
+            errLogToConsole: false,
+            onError: function(err) {
+                return notify().write(err);
+            }
+        })) // Compile SASS to CSS
+        .pipe(gulp.dest(dirs.build + '/css')) // Write to disk
+        .pipe(livereload());
 });
 
 // Function that returns an array of all of the 
@@ -53,7 +67,8 @@ gulp.task('js', function() {
             .pipe(gulp.dest(dirs.build + '/js')) // Write to disk
             .pipe(uglify()) // Uglify the file
             .pipe(rename(folder + '.min.js')) // Add .min to the filename
-            .pipe(gulp.dest(dirs.build + '/js')); // Write to disk
+            .pipe(gulp.dest(dirs.build + '/js')) // Write to disk
+            .pipe(livereload());
     }));
 });
 
@@ -61,7 +76,17 @@ gulp.task('js', function() {
 gulp.task('hint', function () {
     return gulp.src(files.allJS)
         .pipe(jshint()) // JSHint all of our development files
+        .pipe(notify(function (file) {
+            if (file.jshint.success) return false;
+            var errors = file.jshint.results.map(function (data) {
+            if (data.error) {
+                return "(" + data.error.line + ':' + data.error.character + ') ' + data.error.reason;
+            }
+            }).join("\n");
+            return file.relative + " (" + file.jshint.results.length + " errors)\n" + errors;
+        }))
         .pipe(jshint.reporter('jshint-stylish')); // Use the stylish output
+        
 });
 
 // The Build Cleaner
