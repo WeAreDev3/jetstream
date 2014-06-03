@@ -16,7 +16,9 @@ var express = require('express'),
     morgan = require('morgan'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
-    session = require('express-session');
+    session = require('express-session'),
+    sessionStore = new session.MemoryStore(),
+    passportSocketIo = require('passport.socketio');
 
 // Define public folders for our web app
 app.use(express.static(config.root + '/public'));
@@ -30,7 +32,9 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser());
 app.use(session({
-    secret: 'super secret'
+    key: 'connect.sid',
+    secret: 'super secret',
+    store: sessionStore
 }));
 
 // Assign swig.renderFile to all .html files
@@ -56,11 +60,31 @@ db.rdsSubscriber.on('message', function(channel, message) {
     l('message: ', db.redisStringToObject(message));
 });
 
+// io.use(function(socket, next) {
+//     l(socket.request.headers.cookie);
+
+//     next();
+// });
+
+io.use(passportSocketIo.authorize({
+    cookieParser: cookieParser,
+    key: 'connect.sid',
+    secret: 'super secret',
+    store: sessionStore,
+    success: function(data, accept) {
+        l(data.user.displayName, 'is authenticated with Socket.IO');
+        accept(null, true);
+    },
+    fail: function(data, message, error, accept) {
+        l('IO user is not authenticated:', data.id);
+    }
+}));
+
 // socket.io
 io.on('connection', function(socket) {
-    l('User connected:', socket.id);
+    l(socket.user.displayName, 'connected to Socket.IO:');
     socket.on('disconnect', function() {
-        l('User disconnected:', socket.id);
+        l('User disconnected:', socket.user.displayName);
     });
 });
 
