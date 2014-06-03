@@ -16,7 +16,7 @@ module.exports = function(app, passport) {
             clientSecret: config.auth.clientSecret
         },
         function(tokens, profile, done) {
-            l(profile.displayName, 'signed in!');
+            l(profile.displayName, 'signed in with Passport!');
             // Create or update user, call done() when complete...
             done(null, profile, tokens);
         }));
