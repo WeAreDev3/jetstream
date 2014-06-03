@@ -85,6 +85,10 @@ gulp.task('watch', function () {
     console.timeEnd('Gulp Initialization Time');
 });
 
-gulp.task('default', function () {
+gulp.task('dev', function () {
     sequence('clean', ['install', 'css', 'hint', 'js'], 'watch');
 });
+
+gulp.task('default', function () {
+    sequence('clean', ['css', 'hint', 'js'], 'watch');
+})
