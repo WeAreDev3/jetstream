@@ -16,8 +16,7 @@ body {
         padding: 10px;
         color: rgba(0,0,0,0.7);
         font-size: 14px;
-        text-transform: uppercase;
-        font-weight: bold;
+        font-weight: 800;
     }
 
     section {
@@ -45,6 +44,8 @@ body {
                 white-space: normal;
                 padding: 5px;
                 background-color: rgb(255,255,255);
+                border-bottom: 2px solid rgba(0,0,0,0.1);
+
 
                 .message-user, .message-date, .message-time {
                     display: inline;
@@ -97,7 +98,7 @@ body {
                     float: right;
                     margin-left: 5px;
                     border-bottom: 10px solid transparent;
-                    border-right: 10px solid #FFFFFF;
+                    border-left: 10px solid #FFFFFF;
                     margin-right: -15px;
                     margin-top: -5px;
                 }
