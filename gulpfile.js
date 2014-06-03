@@ -1,3 +1,8 @@
+/*
+TODO:
+1. Add autoprefixer plugin
+*/
+
 // File includes
 console.time('Gulp Initialization Time');
 var fs = require('fs'), // File system module (built-in)
@@ -16,6 +21,7 @@ var fs = require('fs'), // File system module (built-in)
     uglify = require('gulp-uglifyjs'), // UglifyJS piped files
     clean = require('gulp-clean'),
     install = require('gulp-install'),
+    notify = require('gulp-notify'),
 
     // Directories and files, for easy access
     files = {
@@ -30,7 +36,13 @@ var fs = require('fs'), // File system module (built-in)
 // The CSS task
 gulp.task('css', function () {
     return gulp.src(files.sass)
-        .pipe(sass()) // Compile SASS to CSS
+        .pipe(sass({
+            style: 'compressed',
+            errLogToConsole: false,
+            onError: function(err) {
+                return notify().write(err);
+            }
+        })) // Compile SASS to CSS
         .pipe(gulp.dest(dirs.build + '/css')); // Write to disk
 });
 
@@ -61,7 +73,11 @@ gulp.task('js', function() {
 gulp.task('hint', function () {
     return gulp.src(files.allJS)
         .pipe(jshint()) // JSHint all of our development files
+        .on('error', notify.onError(function (error) {
+            return error.message;
+        }))
         .pipe(jshint.reporter('jshint-stylish')); // Use the stylish output
+        
 });
 
 // The Build Cleaner
