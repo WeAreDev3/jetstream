@@ -22,6 +22,7 @@ var fs = require('fs'), // File system module (built-in)
     clean = require('gulp-clean'),
     install = require('gulp-install'),
     notify = require('gulp-notify'),
+    livereload = require('gulp-livereload'),
 
     // Directories and files, for easy access
     files = {
@@ -43,7 +44,8 @@ gulp.task('css', function () {
                 return notify().write(err);
             }
         })) // Compile SASS to CSS
-        .pipe(gulp.dest(dirs.build + '/css')); // Write to disk
+        .pipe(gulp.dest(dirs.build + '/css')) // Write to disk
+        .pipe(livereload());
 });
 
 // Function that returns an array of all of the 
@@ -65,7 +67,8 @@ gulp.task('js', function() {
             .pipe(gulp.dest(dirs.build + '/js')) // Write to disk
             .pipe(uglify()) // Uglify the file
             .pipe(rename(folder + '.min.js')) // Add .min to the filename
-            .pipe(gulp.dest(dirs.build + '/js')); // Write to disk
+            .pipe(gulp.dest(dirs.build + '/js')) // Write to disk
+            .pipe(livereload());
     }));
 });
 
