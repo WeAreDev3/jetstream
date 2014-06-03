@@ -76,8 +76,14 @@ gulp.task('js', function() {
 gulp.task('hint', function () {
     return gulp.src(files.allJS)
         .pipe(jshint()) // JSHint all of our development files
-        .on('error', notify.onError(function (error) {
-            return error.message;
+        .pipe(notify(function (file) {
+            if (file.jshint.success) return false;
+            var errors = file.jshint.results.map(function (data) {
+            if (data.error) {
+                return "(" + data.error.line + ':' + data.error.character + ') ' + data.error.reason;
+            }
+            }).join("\n");
+            return file.relative + " (" + file.jshint.results.length + " errors)\n" + errors;
         }))
         .pipe(jshint.reporter('jshint-stylish')); // Use the stylish output
         
