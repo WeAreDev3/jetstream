@@ -91,4 +91,4 @@ gulp.task('dev', function () {
 
 gulp.task('default', function () {
     sequence('clean', ['css', 'hint', 'js'], 'watch');
-})
+});
