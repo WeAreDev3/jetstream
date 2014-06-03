@@ -60,12 +60,7 @@ db.rdsSubscriber.on('message', function(channel, message) {
     l('message: ', db.redisStringToObject(message));
 });
 
-// io.use(function(socket, next) {
-//     l(socket.request.headers.cookie);
-
-//     next();
-// });
-
+// IO authentication
 io.use(passportSocketIo.authorize({
     cookieParser: cookieParser,
     key: 'connect.sid',
