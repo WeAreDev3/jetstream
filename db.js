@@ -192,6 +192,28 @@ var def = {
         ob.timestamp = new Date(ob.timestamp);
         return ob;
     },
+
+    getIdFromGoogId: function (googId, callback) {
+        def.rql(function (conn) {
+            r.table('users').getAll(googId).run(conn, function (err, cursor) {
+                if (err) {
+                    callback(err);
+                } else {
+                    cursor.toArray(function (err, list) {
+                        if (err) {
+                            callback(err);
+                        } else {
+                            if (list.length != 1) {
+                                callback(new Error('Problem with getIdFromGoogId'));
+                            } else {
+                                callback(null, list[0].id);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    },
     isGoogleUser: function (googId, callback) {
         def.rql(function (conn) {
             r.table('users').getAll(googId, {index:'googId'}).count().run(conn, function (err, res) {
@@ -200,7 +222,9 @@ var def = {
                 } else {
                     l(res);
                     if (res === 1) {
-                        callback(null, true, res[0].id);
+                        def.getIdFromGoogId(googId, function (uuid) {
+                            callback(null, true, uuid);
+                        });
                     } else if (res === 0) {
                         callback(null, false);
                     } else {
