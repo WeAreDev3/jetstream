@@ -17,13 +17,13 @@ module.exports = function(app, passport) {
             clientSecret: config.auth.clientSecret
         },
         function(tokens, profile, done) {
-            db.isGoogleUser(profile.id, function (err, is, id) {
+            db.isGoogleUser(profile.id, function (err, isUser, id) {
                 if (err) {
                     l('here it is..', err);
                 } else {
-                    if (is) {
+                    if (isUser) {
                         l(profile.displayName, 'already exists');
-                        profile.uuid = id;
+                        profile.name.uuid = id;
                     } else {
                         var newUser = new db.GoogUser(profile.id,
                             profile.displayName, profile.image.url,
@@ -38,13 +38,13 @@ module.exports = function(app, passport) {
                                 l('User failed to create');
                             } else {
                                 l('Created new user:', profile.displayName + '!');
+                                profile.name.uuid = result.generated_keys[0];
                             }
                         });
                     }
                 }
             });
             l(profile.displayName, 'signed in with Passport!');
-            // Create or update user, call done() when complete...
             done(null, profile, tokens);
         }));
 };

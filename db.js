@@ -215,6 +215,7 @@ var def = {
         });
     },
     isGoogleUser: function (googId, callback) {
+        // reqs getIdFromGoogId function
         def.rql(function (conn) {
             r.table('users').getAll(googId, {index:'googId'}).count().run(conn, function (err, res) {
                 if (err) {
