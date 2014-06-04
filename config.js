@@ -6,7 +6,7 @@ module.exports = {
         'db': 'jetstream',
         'authKey': 'password', // TODO: make production-ready
         tables: {
-            users: ['username'],
+            users: ['username', 'googId'],
             chats: ['timestamp'],
             messages: ['chatId', 'timestamp', 'user']
         }

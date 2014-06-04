@@ -12,6 +12,7 @@ var express = require('express'),
 
     // Middleware/template/helper modules
     swig = require('swig'),
+    events = require('events'),
     passport = require('passport'),
     morgan = require('morgan'),
     bodyParser = require('body-parser'),
@@ -55,9 +56,9 @@ require('./passport')(app, passport);
 require(config.root + '/server/routes')(app, passport);
 
 // db listener
+var dbMessage = new events.EventEmitter();
 db.rdsSubscriber.on('message', function(channel, message) {
-    l('channel: ' + channel);
-    l('message: ', db.redisStringToObject(message));
+    dbMessage.emit('message', db.redisStringToObject(message));
 });
 
 // IO authentication
@@ -80,6 +81,11 @@ io.on('connection', function(socket) {
     l(socket.user.displayName, 'connected to Socket.IO:');
     socket.on('disconnect', function() {
         l('User disconnected:', socket.user.displayName);
+    });
+    socket.on('ready', function () {
+        dbMessage.on('message', function (data) {
+            //
+        });
     });
 });
 

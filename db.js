@@ -104,11 +104,13 @@ var def = {
     	});
     },
 
-    GoogUser: function (id, name, imgUrl, profUrl) {
+    GoogUser: function (id, name, imgUrl, profUrl, fname, lname) {
         this.googId = id;
         this.googName = name;
         this.googImgUrl = imgUrl;
         this.googProfUrl = profUrl;
+        this.googFname = fname;
+        this.googLname = lname;
     },
 
     User: function (userOb, gender, language, timezone) {
@@ -189,6 +191,24 @@ var def = {
         ob = JSON.parse(string);
         ob.timestamp = new Date(ob.timestamp);
         return ob;
+    },
+    isGoogleUser: function (googId, callback) {
+        def.rql(function (conn) {
+            r.table('users').getAll(googId, {index:'googId'}).count().run(conn, function (err, res) {
+                if (err) {
+                    callback(err);
+                } else {
+                    l(res);
+                    if (res === 1) {
+                        callback(null, true, res[0].id);
+                    } else if (res === 0) {
+                        callback(null, false);
+                    } else {
+                        callback(new Error('Something went very wrong in the isGoogleUser function'));
+                    }
+                }
+            });
+        });
     }
 };
 
