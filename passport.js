@@ -22,7 +22,6 @@ module.exports = function(app, passport) {
                     l('here it is..', err);
                 } else {
                     if (isUser) {
-                        l(profile.displayName, 'already exists');
                         profile.name.uuid = id;
                     } else {
                         var newUser = new db.GoogUser(profile.id,
