@@ -107,6 +107,7 @@ io.on('connection', function(socket) {
                 //
             } else {
                 var giveToClient = {};
+                giveToClient.username = res.username;
                 giveToClient.googName = res.googName;
                 giveToClient.googImgUrl = res.googImgUrl;
                 socket.emit('getUserInfo', giveToClient);
