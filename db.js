@@ -148,7 +148,6 @@ var def = {
     },
 
     Message: function (initUserName, initUserId, chatId, message) {
-        this.username = initUserName;
         this.user = initUserId;
         this.chatId = chatId;
         this.message = message;
@@ -195,18 +194,25 @@ var def = {
 
     getIdFromGoogId: function (googId, callback) {
         def.rql(function (conn) {
-            r.table('users').getAll(googId).run(conn, function (err, cursor) {
+            r.table('users').getAll(googId, {index:'googId'}).run(conn, function (err, cursor) {
                 if (err) {
                     callback(err);
+                    cursor.close();
+                    conn.close();
                 } else {
                     cursor.toArray(function (err, list) {
+                        cursor.close();
                         if (err) {
+                            conn.close();
                             callback(err);
                         } else {
+                            l(list);
                             if (list.length != 1) {
                                 callback(new Error('Problem with getIdFromGoogId'));
+                                conn.close();
                             } else {
                                 callback(null, list[0].id);
+                                conn.close();
                             }
                         }
                     });

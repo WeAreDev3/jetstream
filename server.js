@@ -57,6 +57,7 @@ require(config.root + '/server/routes')(app, passport);
 
 // db listener
 var dbMessage = new events.EventEmitter();
+dbMessage.setMaxListeners(0);
 db.rdsSubscriber.on('message', function(channel, message) {
     dbMessage.emit('message', db.redisStringToObject(message));
 });
@@ -68,8 +69,15 @@ io.use(passportSocketIo.authorize({
     secret: 'super secret',
     store: sessionStore,
     success: function(data, accept) {
-        l(data.user.displayName, 'is authenticated with Socket.IO');
-        accept(null, true);
+        db.getIdFromGoogId(data.user.id, function (err, id) {
+            if (err) {
+                l(err);
+            } else {
+                data.user.uuid = id;
+                l(data.user.displayName, 'is authenticated with Socket.IO');
+                accept(null, true);
+            }
+        });
     },
     fail: function(data, message, error, accept) {
         l('IO user is not authenticated:', data.id);
@@ -84,7 +92,7 @@ io.on('connection', function(socket) {
     });
     socket.on('ready', function () {
         dbMessage.on('message', function (data) {
-            //
+            
         });
     });
 });
