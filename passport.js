@@ -29,7 +29,7 @@ module.exports = function(app, passport) {
                             profile.displayName, profile.image.url,
                             profile.url, profile.name.givenName,
                             profile.name.familyName);
-                        newUser = new db.User(newUser,
+                        newUser = new db.User(newUser, null,
                             profile.gender ? profile.gender : null,
                             profile.language ? profile.language : null,
                             null);

@@ -114,8 +114,9 @@ var def = {
         this.googLname = lname;
     },
 
-    User: function (userOb, gender, language, timezone) {
+    User: function (userOb, username, gender, language, timezone) {
         // takes either the GoogUser or JetstreamUser. init only
+        userOb.username = username;
         userOb.gender = gender;
         userOb.language = language;
         userOb.timezone = timezone;
@@ -125,8 +126,7 @@ var def = {
         return userOb;
     },
 
-    JetstreamUser: function (usrnm, fname, lname, passwd, slt) {
-        this.username = usrnm;
+    JetstreamUser: function (fname, lname, passwd, slt) {
         this.firstName = fname;
         this.lastName = lname;
         this.password = passwd;
