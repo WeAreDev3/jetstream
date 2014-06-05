@@ -22,7 +22,7 @@ module.exports = function(app, passport) {
                     l('here it is..', err);
                 } else {
                     if (isUser) {
-                        profile.name.uuid = id;
+                        //
                     } else {
                         var newUser = new db.GoogUser(profile.id,
                             profile.displayName, profile.image.url,
@@ -37,7 +37,6 @@ module.exports = function(app, passport) {
                                 l('User failed to create');
                             } else {
                                 l('Created new user:', profile.displayName + '!');
-                                profile.name.uuid = result.generated_keys[0];
                             }
                         });
                     }

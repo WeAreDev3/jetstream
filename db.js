@@ -117,6 +117,7 @@ var def = {
     User: function (userOb, username, gender, language, timezone) {
         // takes either the GoogUser or JetstreamUser. init only
         userOb.username = username;
+        userOb.settings = {};
         userOb.gender = gender;
         userOb.language = language;
         userOb.timezone = timezone;
@@ -148,7 +149,7 @@ var def = {
         });
     },
 
-    Message: function (initUserName, initUserId, chatId, message) {
+    Message: function (initUserId, chatId, message) {
         this.user = initUserId;
         this.chatId = chatId;
         this.message = message;
@@ -224,6 +225,7 @@ var def = {
         // reqs getIdFromGoogId function
         def.rql(function (conn) {
             r.table('users').getAll(googId, {index:'googId'}).count().run(conn, function (err, res) {
+                conn.close();
                 if (err) {
                     callback(err);
                 } else {

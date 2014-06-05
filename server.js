@@ -89,7 +89,7 @@ io.on('connection', function(socket) {
     socket.on('disconnect', function() {
         l('User disconnected:', socket.user.displayName);
     });
-    socket.on('ready', function () {
+    socket.once('ready', function () {
         dbMessage.on('message', function (data) {
             db.userInChat(socket.user.uuid, data.chatId, function (err, bool) {
                 if (err) {
@@ -110,6 +110,21 @@ io.on('connection', function(socket) {
                 giveToClient.googName = res.googName;
                 giveToClient.googImgUrl = res.googImgUrl;
                 socket.emit('getUserInfo', giveToClient);
+            }
+        });
+    });
+    socket.on('message', function (data) {
+        db.userInChat(socket.user.uuid, data.chatId, function (err, bool) {
+            if (err) {
+                //
+            } else {
+                var newMessage = new db.Message(socket.user.uuid,
+                    data.chatId, data.message);
+                db.createMessage(newMessage, function (err, res) {
+                    if (err) {
+                        //
+                    }
+                });
             }
         });
     });
