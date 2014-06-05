@@ -48,7 +48,7 @@ gulp.task('css', function () {
         .pipe(livereload());
 });
 
-// Function that returns an array of all of the 
+// Function that returns an array of all of the
 // directories within the given directory
 function getFolders(dir){
     // Grab all files & folders, then filter out the ones that
@@ -86,7 +86,7 @@ gulp.task('hint', function () {
             return file.relative + " (" + file.jshint.results.length + " errors)\n" + errors;
         }))
         .pipe(jshint.reporter('jshint-stylish')); // Use the stylish output
-        
+
 });
 
 // The Build Cleaner

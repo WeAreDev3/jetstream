@@ -8,6 +8,7 @@ var Chat = Chat || function (data, parent) {
     this.id = data.id;
 
     this.initElement(parent);
+    this.window = new Win(this.el);
 };
 
 Chat.prototype.initElement = function(parent) {
@@ -19,6 +20,8 @@ Chat.prototype.initElement = function(parent) {
     container.id = this.id;
     container.classList.add('chat');
     header.textContent = this.name;
+
+    this.el = container;
 
     container.appendChild(header);
     container.appendChild(content);
