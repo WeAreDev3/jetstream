@@ -16,14 +16,18 @@ Chat.prototype.initElement = function(parent) {
 
     var container = document.createElement('div'),
         header = document.createElement('header'),
-        content = document.createElement('section');
+        content = document.createElement('section'),
+        response = document.createElement('footer'),
+        input = document.createElement('input');
     container.id = this.id;
     container.classList.add('chat');
     header.textContent = this.name;
 
     this.el = container;
 
+    response.appendChild(input);
     container.appendChild(header);
     container.appendChild(content);
+    container.appendChild(response);
     parent.appendChild(container);
 };

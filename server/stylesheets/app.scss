@@ -1,3 +1,5 @@
+$radius: 3px;
+
 *, *:before, *:after {
     box-sizing: border-box;
     user-select: none;
@@ -14,10 +16,24 @@ body {
     width: 300px;
     background-color: #F9F9F9;
     border: 1px solid #999999;
-    border-radius: 3px;
+    border-radius: $radius;
+    position: relative;
+    box-shadow: 0 20px 100px -10px transparent;
+    transition: padding .25s, box-shadow .25s;
 
     &.active {
         box-shadow: 0 20px 100px -10px black;
+        border: 1px solid #606060;
+        padding-bottom: 40px;
+
+
+        footer {
+            opacity: 1;
+            input {
+                cursor: text;
+                box-shadow: 0 0 1px 1px #4d90fe;
+            }
+        }
     }
 
     header {
@@ -26,6 +42,7 @@ body {
         color: rgba(0,0,0,0.7);
         font-size: 14px;
         font-weight: 800;
+        cursor: default;
     }
 
     section {
@@ -112,6 +129,29 @@ body {
                     margin-top: -5px;
                 }
             }
+        }
+    }
+
+    footer {
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        transition: .25s;
+        opacity: 0;
+
+        input {
+            margin: 0;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            border-radius: 0 0 $radius $radius;
+            font: inherit;
+            font-size: 14px;
+            cursor: default;
+            outline: none;
+            transition: .25s;
         }
     }
 }
