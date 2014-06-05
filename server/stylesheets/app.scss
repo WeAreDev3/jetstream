@@ -18,7 +18,8 @@ body {
     border: 1px solid #999999;
     border-radius: $radius;
     position: relative;
-    transition: padding .25s;
+    box-shadow: 0 20px 100px -10px transparent;
+    transition: padding .25s, box-shadow .25s;
 
     &.active {
         box-shadow: 0 20px 100px -10px black;
