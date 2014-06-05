@@ -92,7 +92,25 @@ io.on('connection', function(socket) {
     });
     socket.on('ready', function () {
         dbMessage.on('message', function (data) {
-            
+            db.userInChat(socket.user.uuid, data.chatId, function (err, bool) {
+                if (err) {
+                    //
+                } else {
+                    socket.emit('message', data);
+                }
+            });
+        });
+    });
+    socket.on('getUserInfo', function (uuid) {
+        db.getUserInfo(uuid, function (err, res) {
+            if (err) {
+                //
+            } else {
+                var giveToClient = {};
+                giveToClient.googName = res.googName;
+                giveToClient.googImgUrl = res.googImgUrl;
+                socket.emit('getUserInfo', giveToClient);
+            }
         });
     });
 });

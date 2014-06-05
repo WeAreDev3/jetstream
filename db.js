@@ -74,6 +74,7 @@ var def = {
     },
 
     createChat: function (name, userList, callback) {
+        // userlist is list of user IDs
     	var addChatUser = function (userid, chatid, conn) {
     		r.table('users').get(userid).update({
     			chatList: r.row('chatList').append(chatid)
@@ -238,6 +239,23 @@ var def = {
                         callback(new Error('Something went very wrong in the isGoogleUser function'));
                     }
                 }
+            });
+        });
+    },
+    userInChat: function (userid, chatid, callback) {
+        def.rql(function (conn) {
+            r.table('chats').get(chatId)('users')
+            .run(conn, function (err, result) {
+                if (err) {
+                    callback(err);
+                } else {
+                    if (result.indexOf(userid) >= 0) {
+                        callback(null, true);
+                    } else {
+                        callback(null, false);
+                    }
+                }
+                conn.close();
             });
         });
     }
