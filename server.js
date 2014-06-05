@@ -7,7 +7,6 @@ var express = require('express'),
     // Local modules
     config = require('./config'),
     db = require('./db'),
-    val = require('./val'),
     l = require('./log'),
 
     // Middleware/template/helper modules

@@ -207,7 +207,6 @@ var def = {
                             conn.close();
                             callback(err);
                         } else {
-                            l(list);
                             if (list.length != 1) {
                                 callback(new Error('Problem with getIdFromGoogId'));
                                 conn.close();
@@ -228,7 +227,6 @@ var def = {
                 if (err) {
                     callback(err);
                 } else {
-                    l(res);
                     if (res === 1) {
                         def.getIdFromGoogId(googId, function (uuid) {
                             callback(null, true, uuid);
