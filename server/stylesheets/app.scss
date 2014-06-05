@@ -7,12 +7,18 @@
 
 body {
     font-family: 'Open Sans', sans-serif;
+    background-color: #DDDDDD;
 }
 
 .chat {
     width: 300px;
     background-color: #F9F9F9;
-    border: 1px solid rgba(0,0,0,0.1);
+    border: 1px solid #999999;
+    border-radius: 3px;
+
+    &.active {
+        box-shadow: 0 20px 100px -10px black;
+    }
 
     header {
         background-color: rgba(0,0,0,0.03);
