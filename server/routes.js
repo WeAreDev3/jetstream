@@ -16,8 +16,9 @@ module.exports = function(app, passport) {
     // The homepage
     app.route('/').get(ensureAuthenticated, function(req, res) {
         res.render('index', {
-            title: config.appName + ' - Home',
             appName: config.appName,
+            title: 'Home',
+            auth: config.auth,
             user: req.user
         });
     });
@@ -37,9 +38,14 @@ module.exports = function(app, passport) {
 
     app.route('/app').get(ensureAuthenticated, function(req, res) {
         res.render('app', {
-            title: config.appName,
             appName: config.appName,
-            user: req.user
+            title: config.appName,
+            auth: config.auth,
+            user: req.user,
+            assets: {
+                css: ['http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800|Grand+Hotel', 'app.css'],
+                js: ['/socket.io/socket.io.js', 'main.js', 'app.js']
+            }
         });
     });
 

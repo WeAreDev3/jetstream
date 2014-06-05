@@ -1,20 +1,8 @@
-<!DOCTYPE html>
-<html>
+{% extends 'layouts/default.html' %}
 
-<head>
-    <title>{{appName}} - Home</title>
-
-    <meta name="google-signin-clientid" content="1597733950-19qdccarm1fo5ojrde7cemhgrufk9ef7.apps.googleusercontent.com">
-    <meta name="google-signin-scope" content="profile">
-    <meta name="google-signin-cookiepolicy" content="single_host_origin">
-
-    <link rel="stylesheet" type="text/css" href="css/main.css">
-</head>
-
-<body>
-Welcome, <a href="{{user.url}}">{{user.displayName}}</a>. <img src="{{user.image.url}}">
+{% block body %}
+Welcome, <a href="{{user.url}}">{{user.displayName}}</a>.
+<img src="{{user.image.url}}">
 <script src="/socket.io/socket.io.js"></script>
 <script src="main.js"></script>
-</body>
-
-</html>
+{% endblock %}
