@@ -128,6 +128,25 @@ io.on('connection', function(socket) {
             }
         });
     });
+    socket.on('createChat', function (data) {
+        db.areFriends(data.users, function (err, ob) {
+            if (Object.keys(ob).length === 0) {
+                db.createChat(data.name, data.users, function (err, chatId) {
+                    if (err) {
+                        //
+                    } else {
+                        var chatConfirm = {
+                            name: data.name,
+                            id: chatId
+                        };
+                        socket.emit('createChat', chatConfirm);
+                    }
+                });
+            } else { // not all participants are friends
+                //
+            }
+        });
+    });
 });
 
 // Open the ports for business

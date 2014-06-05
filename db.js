@@ -80,13 +80,21 @@ var def = {
     			chatList: r.row('chatList').append(chatid)
     		}).run(conn, function (err, result) {
                 conn.close();
+                i++;
     			if (err) {
-                    callback(err);
-                } else {
-                    callback(null, result);
+                    error.push(err);
+                } else if (i === j) {
+                    if (error.length > 0) {
+                        callback(error);
+                    } else {
+                        callback(null, result.generated_keys[0]);
+                    }
                 }
     		});
-    	};
+    	},
+            error = [],
+            j = 0,
+            i = 0;
     	def.rql(function (err, conn) {
     		r.table('chats').insert({
     			'users': userlist,
@@ -99,6 +107,7 @@ var def = {
     			} else {
     				for (var user in userlist) {
     					addChatUser(userlist[user], result.generated_keys[0], conn);
+                        j++;
     				}
     			}
     		});
@@ -256,6 +265,68 @@ var def = {
                     }
                 }
                 conn.close();
+            });
+        });
+    },
+    areFriends: function (userList, callback) {
+        /*  passes an object with properties being the 
+            Id's of each user and the value being a list
+            of users that they are not friends with
+        */
+        var errors = {},
+            blackList = {},
+            friendList = {},
+            i = 0,
+            j = 0,
+            getUsersFriends = function (usr, runNext) {
+                db.rql(function (conn) {
+                    r.table('users').get(usr)('friends')
+                    .run(conn, function (err, res) {
+                        j++;
+                        if (err) {
+                            errors.usr = err;
+                        } else {
+                            friendList.usr = res;
+                        }
+                        if (i === j) {
+                            popBlacklist();
+                        }
+                    });
+                });
+            },
+            popBlacklist = function () {
+                for (var person in friendList) {
+                    blackList[person] = [];
+                    for (var other in friendList) {
+                        if (person !== other) {
+                            if (friendList[person].indexOf(other) < 0) {
+                                blackList[person].push(other);
+                            }
+                        }
+                    }
+                }
+                callback(null, blackList);
+            };
+        for (var user = 0; user < userList.length; i++) {
+            getUsersFriends(userList[i], i === userList.length - 1);
+            i++;
+        }
+    },
+    getInfoFromUsername: function (username, callback) {
+        def.rql(function (conn) {
+            r.table('users').getAll(username, {index: 'username'})
+            .run(conn, function (err, cursor) {
+                if (err) {
+                    callback(err);
+                } else {
+                    cursor.toArray(function (err, list) {
+                        if (err) {
+                            callback(err);
+                        } else {
+                            callback(null, list[0]);
+                        }
+                    });
+                }
             });
         });
     }
