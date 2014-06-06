@@ -60,6 +60,9 @@ dbMessage.setMaxListeners(0);
 db.rdsSubscriber.on('message', function(channel, message) {
     dbMessage.emit('message', db.redisStringToObject(message));
 });
+db.rdsSubscriber.on('request', function (channel, data) {
+    // body...
+});
 
 // IO authentication
 io.use(passportSocketIo.authorize({
