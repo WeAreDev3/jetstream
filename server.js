@@ -24,6 +24,7 @@ var express = require('express'),
 app.use(express.static(config.root + '/public'));
 app.use(express.static(config.root + '/public/css'));
 app.use(express.static(config.root + '/public/js'));
+app.use(express.static(config.root + '/public/fonts'));
 
 // Log every request
 app.use(morgan('dev'));
@@ -59,6 +60,9 @@ var dbMessage = new events.EventEmitter();
 dbMessage.setMaxListeners(0);
 db.rdsSubscriber.on('message', function(channel, message) {
     dbMessage.emit('message', db.redisStringToObject(message));
+});
+db.rdsSubscriber.on('request', function (channel, data) {
+    // body...
 });
 
 // IO authentication
