@@ -28,7 +28,7 @@ app.use(express.static(config.root + '/public/js'));
 // Log every request
 app.use(morgan('dev'));
 
-// Set express to use cookies/sesions and parse POSTs
+// Set express to use cookies/sessions and parse POSTs
 app.use(cookieParser());
 app.use(bodyParser());
 app.use(session({
