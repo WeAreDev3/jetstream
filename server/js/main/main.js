@@ -4,7 +4,7 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 
     if (inApp) {
-        var socket = io();
+        window.socket = io();
         socket.emit('ready');
     }
 
