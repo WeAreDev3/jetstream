@@ -91,6 +91,7 @@ io.on('connection', function(socket) {
         l('User disconnected:', socket.user.displayName);
     });
     socket.once('ready', function () {
+        l(socket.user.displayName, 'is ready');
         dbMessage.on('message', function (data) {
             db.userInChat(socket.user.uuid, data.chatId, function (err, bool) {
                 if (err) {
