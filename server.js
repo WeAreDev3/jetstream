@@ -61,6 +61,9 @@ dbMessage.setMaxListeners(0);
 db.rdsSubscriber.on('message', function(channel, message) {
     dbMessage.emit('message', db.redisStringToObject(message));
 });
+db.rdsSubscriber.on('request', function (channel, data) {
+    // body...
+});
 
 // IO authentication
 io.use(passportSocketIo.authorize({
@@ -116,6 +119,7 @@ io.on('connection', function(socket) {
         });
     });
     socket.on('message', function (data) {
+        l(socket.user.displayName, 'sent a message:', data);
         db.userInChat(socket.user.uuid, data.chatId, function (err, bool) {
             if (err) {
                 //

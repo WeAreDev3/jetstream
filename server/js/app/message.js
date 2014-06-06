@@ -1,4 +1,5 @@
 var Message = Message || function (data) {
+    var self = this;
     this.id = data.id;
     this.content = data.message;
     this.chatId = data.chatId;
@@ -7,6 +8,11 @@ var Message = Message || function (data) {
 
     this.initElement();
     app.messages.push(this);
+
+    return {
+        chatId: self.chatId,
+        message: self.content
+    };
 };
 
 Message.prototype.initElement = function() {

@@ -126,6 +126,8 @@ var def = {
     User: function (userOb, username, gender, language, timezone) {
         // takes either the GoogUser or JetstreamUser. init only
         userOb.username = username;
+        userOb.blackList = [];
+        userOb.requests = [];
         userOb.settings = {};
         userOb.gender = gender;
         userOb.language = language;
@@ -253,7 +255,7 @@ var def = {
     },
     userInChat: function (userid, chatid, callback) {
         def.rql(function (conn) {
-            r.table('chats').get(chatId)('users')
+            r.table('chats').get(chatid)('users')
             .run(conn, function (err, result) {
                 if (err) {
                     callback(err);
@@ -316,6 +318,7 @@ var def = {
         def.rql(function (conn) {
             r.table('users').getAll(username, {index: 'username'})
             .run(conn, function (err, cursor) {
+                conn.close();
                 if (err) {
                     callback(err);
                 } else {
@@ -329,6 +332,26 @@ var def = {
                 }
             });
         });
+    },
+    sendFriendRequest: function (fromId, toId, callback) {
+        def.rds.publish('request', {
+            from: fromId,
+            timestamp: (new Date()).toString()
+        });
+        r.table('users').get(toId)('requests').insertAt(0, {
+            from: fromId,
+            timestamp: r.now()
+        }).run(conn, function (err, res) {
+            conn.close();
+            if (err) {
+                callback(err);
+            } else {
+                callback(null, res);
+            }
+        });
+    },
+    isBlacklisted: function (fromId, toId, callback) {
+        //
     }
 };
 
