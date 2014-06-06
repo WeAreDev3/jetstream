@@ -53,6 +53,7 @@ var users = {
 };
 
 var currentUser = {
-    'id': 'thealtus',
+    'id': 'superspecialninja',
+    'username': 'thealtus',
     'displayName': 'Tal Ben-Ari'
 };

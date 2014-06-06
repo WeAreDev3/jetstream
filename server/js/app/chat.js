@@ -9,6 +9,7 @@ var Chat = Chat || function (data, parent) {
 
     this.initElement(parent);
     this.window = new Win(this.el);
+    app.chats.push(this);
 };
 
 Chat.prototype.initElement = function(parent) {
@@ -22,6 +23,7 @@ Chat.prototype.initElement = function(parent) {
     container.id = this.id;
     container.classList.add('chat');
     header.textContent = this.name;
+    input.onkeypress = this.checkInput.bind(this);
 
     this.el = container;
 
@@ -30,4 +32,18 @@ Chat.prototype.initElement = function(parent) {
     container.appendChild(content);
     container.appendChild(response);
     parent.appendChild(container);
+};
+
+Chat.prototype.checkInput = function(e) {
+    var input = this.el.getElementsByTagName('input')[0];
+    if (e.keyCode === 13) {
+        new Message({
+            id: Math.floor(Math.random()*1000),
+            message: input.value,
+            chatId: this.id,
+            userId: currentUser.id,
+            timestamp: (new Date()).toISOString()
+        });
+        input.value = '';
+    }
 };
