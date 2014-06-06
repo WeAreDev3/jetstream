@@ -38,7 +38,7 @@ Chat.prototype.initElement = function(parent) {
 Chat.prototype.checkInput = function(e) {
     var input = this.el.getElementsByTagName('input')[0],
         message;
-    if (e.keyCode === 13 && input.value !== '') {
+    if (e.keyCode === 13 && input.value.trim() !== '') {
         message = new Message({
             id: Math.floor(Math.random() * 1000),
             message: input.value,
