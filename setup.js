@@ -5,7 +5,6 @@
 var r = require('rethinkdb'),
     config = require('./config'),
     l = require('./log'),
-    redis = require('then-redis'),
     db = require('./db');
 
 var i = 0,
