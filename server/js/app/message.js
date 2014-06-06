@@ -6,6 +6,7 @@ var Message = Message || function (data) {
     this.timestamp = new Date(data.timestamp);
 
     this.initElement();
+    app.messages.push(this);
 };
 
 Message.prototype.initElement = function() {
@@ -17,8 +18,9 @@ Message.prototype.initElement = function() {
         date = document.createElement('div'),
         time = document.createElement('div'),
         message = document.createElement('div');
+    
     container.id = this.id;
-    container.classList.add('message', (this.user.username === currentUser.id ? 'right': 'left'));
+    container.classList.add('message', (this.user.username === currentUser.username ? 'right': 'left'));
     pic.src = this.user.imgUrl;
     content.classList.add('message-content');
     user.classList.add('message-user');
@@ -37,4 +39,6 @@ Message.prototype.initElement = function() {
     container.appendChild(pic);
     container.appendChild(content);
     parent.appendChild(container);
+
+    parent.scrollTop = parent.scrollHeight;
 };

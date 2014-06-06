@@ -24,11 +24,12 @@ var express = require('express'),
 app.use(express.static(config.root + '/public'));
 app.use(express.static(config.root + '/public/css'));
 app.use(express.static(config.root + '/public/js'));
+app.use(express.static(config.root + '/public/fonts'));
 
 // Log every request
 app.use(morgan('dev'));
 
-// Set express to use cookies/sesions and parse POSTs
+// Set express to use cookies/sessions and parse POSTs
 app.use(cookieParser());
 app.use(bodyParser());
 app.use(session({
@@ -93,6 +94,7 @@ io.on('connection', function(socket) {
         l('User disconnected:', socket.user.displayName);
     });
     socket.once('ready', function () {
+        l(socket.user.displayName, 'is ready');
         dbMessage.on('message', function (data) {
             db.userInChat(socket.user.uuid, data.chatId, function (err, bool) {
                 if (err) {

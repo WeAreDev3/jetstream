@@ -19,10 +19,10 @@ var fs = require('fs'), // File system module (built-in)
     stylish = require('jshint-stylish'), // Make JSHint look better
     concat = require('gulp-concat'), // Concatenate files together
     uglify = require('gulp-uglifyjs'), // UglifyJS piped files
-    clean = require('gulp-clean'),
-    install = require('gulp-install'),
-    notify = require('gulp-notify'),
-    livereload = require('gulp-livereload'),
+    clean = require('gulp-clean'), // Clean out the build folder
+    install = require('gulp-install'), // Install new npm packages
+    notify = require('gulp-notify'), // Send messages to the system's notifications
+    livereload = require('gulp-livereload'), // Set up a LiveReload server
 
     // Directories and files, for easy access
     files = {
@@ -45,7 +45,7 @@ gulp.task('css', function () {
             }
         })) // Compile SASS to CSS
         .pipe(gulp.dest(dirs.build + '/css')) // Write to disk
-        .pipe(livereload());
+        .pipe(livereload()); // Start a LiveReload instance
 });
 
 // Function that returns an array of all of the
@@ -62,13 +62,13 @@ function getFolders(dir){
 gulp.task('js', function() {
     // For each folder found in server/js, run the following
     return es.concat.apply(null, getFolders(dirs.js).map(function(folder) {
-        return gulp.src(path.join(dirs.js, folder, '/*.js'))
+        return gulp.src(path.join(dirs.js, folder, '/*.js')) // All of the files in a folder
             .pipe(concat(folder + '.js')) // Concatenate all files
             .pipe(gulp.dest(dirs.build + '/js')) // Write to disk
             .pipe(uglify()) // Uglify the file
             .pipe(rename(folder + '.min.js')) // Add .min to the filename
             .pipe(gulp.dest(dirs.build + '/js')) // Write to disk
-            .pipe(livereload());
+            .pipe(livereload()); // Start a LiveReload Instance
     }));
 });
 
@@ -76,6 +76,7 @@ gulp.task('js', function() {
 gulp.task('hint', function () {
     return gulp.src(files.allJS)
         .pipe(jshint()) // JSHint all of our development files
+        // Send the JSHint errors to the OS's notifications api
         .pipe(notify(function (file) {
             if (file.jshint.success) return false;
             var errors = file.jshint.results.map(function (data) {

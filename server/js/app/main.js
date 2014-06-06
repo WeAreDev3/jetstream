@@ -1,3 +1,5 @@
+var inApp = true;
+
 window.addEventListener('mousedown', function (e) {
     var el = e.target, chat = el, i;
 
