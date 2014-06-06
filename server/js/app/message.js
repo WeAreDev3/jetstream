@@ -38,4 +38,6 @@ Message.prototype.initElement = function() {
     container.appendChild(pic);
     container.appendChild(content);
     parent.appendChild(container);
+
+    parent.scrollTop = parent.scrollHeight;
 };
