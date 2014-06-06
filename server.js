@@ -115,6 +115,7 @@ io.on('connection', function(socket) {
         });
     });
     socket.on('message', function (data) {
+        l(socket.user.displayName, 'sent a message:', data);
         db.userInChat(socket.user.uuid, data.chatId, function (err, bool) {
             if (err) {
                 //
