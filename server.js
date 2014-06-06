@@ -24,7 +24,7 @@ var express = require('express'),
 app.use(express.static(config.root + '/public'));
 app.use(express.static(config.root + '/public/css'));
 app.use(express.static(config.root + '/public/js'));
-app.use(express.static(config.root + '/public/fonts'));
+app.use('fonts', express.static(config.root + '/fonts'));
 
 // Log every request
 app.use(morgan('dev'));
