@@ -227,6 +227,34 @@ io.on('connection', function(socket) {
             }
         });
     });
+    socket.on('userSettings', function (specific) {
+        if (specific) {
+            db.getUserSettings(socket.user.uuid,
+                specific, function (err, result) {
+                    if (err) {
+                        // handle it
+                    } else {
+                        var giveSettings = {
+                            specific: specific,
+                            settings: result
+                        };
+                        socket.emit('userSettings', giveSettings);
+                    }
+                });
+        } else {
+            db.getUserSettings(socket.user.uuid, function (err, res) {
+                if (err) {
+                    // handle it
+                } else {
+                    var giveSettings = {
+                        specific: null,
+                        settings: res
+                    };
+                    socket.emit('userSettings', giveSettings);
+                }
+            });
+        }
+    });
 });
 
 // Open the ports for business

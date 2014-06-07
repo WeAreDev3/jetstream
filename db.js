@@ -349,7 +349,7 @@ var def = {
                 callback(err);
             } else {
                 if (bool) {
-                    def.rds(function (conn) {
+                    def.rql(function (conn) {
                         r.table('users').get(toId)('requests')
                         .changeAt(index, rData).run(conn, function (err, res) {
                             if (err) {
@@ -360,7 +360,7 @@ var def = {
                         });
                     });
                 } else {
-                    def.rds(function (conn) {
+                    def.rql(function (conn) {
                         r.table('users').get(toId)('requests').append(rData)
                         .run(conn, function (err, res) {
                             conn.close();
@@ -376,7 +376,7 @@ var def = {
         });
     },
     requestExists: function (fromId, toId, callback) {
-        def.rds(function (conn) {
+        def.rql(function (conn) {
             r.table('users').get(toId)('requests')
             .run(conn, function (err, res) {
                 conn.close();
@@ -402,7 +402,7 @@ var def = {
         });
     },
     isBlacklisted: function (potentialBlacklistee, normalGuy, callback) {
-        def.rds(function (conn) {
+        def.rql(function (conn) {
             r.table('users').get(normalGuy)('blacklist')
             .run(conn, function (err, res) {
                 if (err) {
@@ -417,6 +417,32 @@ var def = {
                 }
             });
         });
+    },
+    getUserSettings: function (uuid, specific, callback) {
+        if ((typeof specific) == 'string') {
+            def.rql(function (conn) {
+                r.table('users').get(uuid)('settings')(specific)
+                .run(conn, function (err, result) {
+                    conn.close();
+                    if (err) {
+                        callback(err);
+                    } else {
+                        callback(null, result);
+                    }
+                });
+            });
+        } else {
+            def.rql(function (conn) {
+                r.table('users').get(uuid)('settings')
+                .run(conn, function (err, result) {
+                    if (err) {
+                        specific(err);
+                    } else {
+                        specific(null, result);
+                    }
+                });
+            });
+        }
     }
 };
 
