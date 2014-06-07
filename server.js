@@ -69,7 +69,7 @@ dbMessage.setMaxListeners(0);
 db.rdsSubscriber.on('message', function(channel, message) {
     dbMessage.emit('message', db.redisStringToObject(message));
 });
-db.rdsSubscriber.on('request', function (channel, data) {
+db.rdsSubscriber.on('request', function(channel, data) {
     // body...
 });
 
@@ -80,7 +80,7 @@ io.use(passportSocketIo.authorize({
     secret: 'super secret',
     store: sessionStore,
     success: function(data, accept) {
-        db.getIdFromGoogId(data.user.id, function (err, id) {
+        db.getIdFromGoogId(data.user.id, function(err, id) {
             if (err) {
                 l(err);
             } else {
@@ -101,10 +101,10 @@ io.on('connection', function(socket) {
     socket.on('disconnect', function() {
         l('User disconnected:', socket.user.displayName);
     });
-    socket.once('ready', function () {
+    socket.once('ready', function() {
         l(socket.user.displayName, 'is ready');
-        dbMessage.on('message', function (data) {
-            db.userInChat(socket.user.uuid, data.chatId, function (err, bool) {
+        dbMessage.on('message', function(data) {
+            db.userInChat(socket.user.uuid, data.chatId, function(err, bool) {
                 if (err) {
                     //
                 } else {
@@ -113,9 +113,9 @@ io.on('connection', function(socket) {
             });
         });
     });
-    socket.on('getUserInfo', function (uuid) {
+    socket.on('getUserInfo', function(uuid) {
         db.isBlacklisted(socket.user.uuid,
-            uuid, function (err, bool) {
+            uuid, function(err, bool) {
                 if (err) {
                     // handle it
                 } else {
@@ -126,7 +126,7 @@ io.on('connection', function(socket) {
                         };
                         socket.emit('getUserInfo', giveToClient);
                     } else {
-                        db.getUserInfo(uuid, function (err, res) {
+                        db.getUserInfo(uuid, function(err, res) {
                             if (err) {
                                 //
                             } else {
@@ -144,9 +144,9 @@ io.on('connection', function(socket) {
                 }
             });
     });
-    socket.on('message', function (data) {
+    socket.on('message', function(data) {
         l(socket.user.displayName, 'sent a message:', data);
-        db.userInChat(socket.user.uuid, data.chatId, function (err, bool) {
+        db.userInChat(socket.user.uuid, data.chatId, function(err, bool) {
             if (err) {
                 //
             } else {
@@ -162,18 +162,18 @@ io.on('connection', function(socket) {
             }
         });
     });
-    socket.on('createChat', function (data) {
-        db.areFriends(data.users, function (err, ob) {
-            var sendFriendRequestCallback = function (err, res) {
-                    if (err) {
-                        // handle
-                    } else {
-                        //all is good
-                    }
-                },
-                isBlacklistedLooper = function (person, nonfriend) {
+    socket.on('createChat', function(data) {
+        db.areFriends(data.users, function(err, ob) {
+            var sendFriendRequestCallback = function(err, res) {
+                if (err) {
+                    // handle
+                } else {
+                    //all is good
+                }
+            },
+                isBlacklistedLooper = function(person, nonfriend) {
                     db.isBlacklisted(person, nonfriend,
-                        function (err, bool) {
+                        function(err, bool) {
                             if (err) {
                                 // handle it
                             } else {
@@ -190,7 +190,7 @@ io.on('connection', function(socket) {
                     );
                 };
             if (Object.keys(ob).length === 0) {
-                db.createChat(data.name, data.users, function (err, chatId) {
+                db.createChat(data.name, data.users, function(err, chatId) {
                     if (err) {
                         //
                     } else {
@@ -210,12 +210,12 @@ io.on('connection', function(socket) {
             }
         });
     });
-    socket.on('getIdFromUsername', function (username) {
-        db.getIdFromUsername(username, function (err, uuid) {
+    socket.on('getIdFromUsername', function(username) {
+        db.getIdFromUsername(username, function(err, uuid) {
             if (err) {
                 // handle it
             } else {
-                db.isBlacklisted(socket.user.uuid, uuid, function (err, bool) {
+                db.isBlacklisted(socket.user.uuid, uuid, function(err, bool) {
                     if (err) {
                         //handle it
                     } else {

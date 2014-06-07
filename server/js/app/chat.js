@@ -1,4 +1,4 @@
-var Chat = Chat || function (data, parent) {
+var Chat = Chat || function(data, parent) {
     this.users = [];
     for (var i = data.users.length - 1; i >= 0; i--) {
         this.users.push(users[data.users[i]].displayName);
@@ -20,7 +20,7 @@ Chat.prototype.initElement = function(parent) {
         content = document.createElement('section'),
         response = document.createElement('footer'),
         input = document.createElement('input');
-    
+
     container.id = this.id;
     container.classList.add('chat');
     header.textContent = this.name;
@@ -38,6 +38,7 @@ Chat.prototype.initElement = function(parent) {
 Chat.prototype.checkInput = function(e) {
     var input = this.el.getElementsByTagName('input')[0],
         message;
+
     if (e.keyCode === 13 && input.value.trim() !== '') {
         message = new Message({
             id: Math.floor(Math.random() * 1000),
