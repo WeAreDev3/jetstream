@@ -357,8 +357,8 @@ var def = {
                             } else {
                                 callback(null, res);
                             }
-                        })
-                    })
+                        });
+                    });
                 } else {
                     def.rds(function (conn) {
                         r.table('users').get(toId)('requests').append(rData)
@@ -398,9 +398,9 @@ var def = {
                         callback(null, false);
                     }
                 }
-            })
-        })
-    }
+            });
+        });
+    },
     isBlacklisted: function (fromId, toId, callback) {
         def.rds(function (conn) {
             r.table('users').get(toId)('blacklist')

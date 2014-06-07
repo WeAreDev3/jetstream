@@ -136,6 +136,13 @@ io.on('connection', function(socket) {
     });
     socket.on('createChat', function (data) {
         db.areFriends(data.users, function (err, ob) {
+            var sendFriendRequestCallback = function (err, res) {
+                if (err) {
+                    // handle
+                } else {
+                    //all is good
+                }
+            };
             if (Object.keys(ob).length === 0) {
                 db.createChat(data.name, data.users, function (err, chatId) {
                     if (err) {
@@ -161,13 +168,7 @@ io.on('connection', function(socket) {
                                     } else {
                                         db.sendFriendRequest(person,
                                             ob[pserson][nonfriend],
-                                            function (err, result) {
-                                                if (err) {
-                                                    // handle it
-                                                } else {
-                                                    // alls good 
-                                                }
-                                            }
+                                            sendFriendRequestCallback
                                         );
                                     }
                                 }
