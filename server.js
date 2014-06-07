@@ -148,7 +148,32 @@ io.on('connection', function(socket) {
                     }
                 });
             } else { // not all participants are friends
-                //
+                for (var person in ob) {
+                    for (var nonfriend in ob[person]) {
+                        db.isBlacklisted(person, ob[person][nonfriend],
+                            function (err, bool) {
+                                if (err) {
+                                    // handle it
+                                } else {
+                                    if (bool) {
+                                        //don't send requests, tell creator
+                                    } else {
+                                        db.sendFriendRequest(person,
+                                            ob[pserson][nonfriend],
+                                            function (err, result) {
+                                                if (err) {
+                                                    // handle it
+                                                } else {
+                                                    // alls good 
+                                                }
+                                            }
+                                        );
+                                    }
+                                }
+                            }
+                        );
+                    }
+                }
             }
         });
     });
