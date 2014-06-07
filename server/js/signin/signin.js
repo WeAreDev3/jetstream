@@ -8,10 +8,11 @@
 })();
 
 function signinCallback(authResult) {
+    var callbackUrl = document.querySelector('[name=google-signin-callback-url]').getAttribute('content');
     console.log(authResult);
     if (authResult.code) {
         console.log('Login successful!');
-        window.location = '/auth/callback?code=' + encodeURIComponent(authResult.code);
+        window.location = callbackUrl + '?code=' + encodeURIComponent(authResult.code);
     } else if (authResult.error) {
         // "immediate_failed" means could not immediately sign in
         console.log('There was an error: ' + authResult.error);
@@ -19,7 +20,5 @@ function signinCallback(authResult) {
 }
 
 function renderButton() {
-    gapi.signin.render('signinButton', {
-        'callback': 'signinCallback'
-    });
+    gapi.signin.render('signinButton');
 }

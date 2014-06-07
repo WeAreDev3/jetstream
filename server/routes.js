@@ -18,7 +18,6 @@ module.exports = function(app, passport) {
         res.render('index', {
             appName: config.appName,
             title: 'Home',
-            auth: config.auth,
             user: req.user
         });
     });
@@ -31,8 +30,13 @@ module.exports = function(app, passport) {
 
     app.route('/signin').get(function(req, res) {
         res.render('signin', {
-            title: config.appName + ' - Sign In',
-            appName: config.appName
+            appName: config.appName,
+            title: 'Sign In',
+            auth: config.auth,
+            assets: {
+                css: ['http://fonts.googleapis.com/css?family=Open+Sans:400,300,700|Grand+Hotel', 'signin.css'],
+                js: ['signin.js']
+            }
         });
     });
 
@@ -40,7 +44,6 @@ module.exports = function(app, passport) {
         res.render('app', {
             appName: config.appName,
             title: config.appName,
-            auth: config.auth,
             user: req.user,
             assets: {
                 css: ['http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800|Grand+Hotel', 'app.css', 'main.css'],
