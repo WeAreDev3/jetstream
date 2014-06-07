@@ -1,4 +1,7 @@
 {% extends 'layouts/default.html' %}
 {% block body %}
-    <div class="icon-menu" id="menu"></div>
+    <div id="userInfo">
+        <img src="{{user.image.url}}" alt="{{user.displayName}}">
+        {{user.displayName}}
+    </div>
 {% endblock %}

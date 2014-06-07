@@ -38,8 +38,16 @@ window.addEventListener('mousedown', function(e) {
 });
 
 window.addEventListener('mouseup', function(e) {
+    var selectableMessages;
+
     if (window.currentWin !== undefined) {
         window.removeEventListener('mousemove', currentWin.drag);
+
+        selectableMessages = document.querySelectorAll('.message-text');
+
+        for (var i = selectableMessages.length - 1; i >= 0; i--) {
+            selectableMessages[i].classList.add('selectable');
+        }
     }
 
     if (window.getSelection().isCollapsed) {
