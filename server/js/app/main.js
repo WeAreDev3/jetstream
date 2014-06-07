@@ -30,11 +30,7 @@ window.addEventListener('mousedown', function(e) {
             app.chats[i].el.classList.remove('active');
         }
         chat.classList.add('active');
-
-        window.move = false;
-        if (el.classList.contains('message-text')) {
-            window.addEventListener('mousemove', selectText);
-        }
+        
     } else {
         for (i = app.chats.length - 1; i >= 0; i--) {
             app.chats[i].el.classList.remove('active');
@@ -45,17 +41,10 @@ window.addEventListener('mousedown', function(e) {
 window.addEventListener('mouseup', function(e) {
     if (window.currentWin !== undefined) {
         window.removeEventListener('mousemove', currentWin.drag);
-
-        if (!window.move) {
-            setTimeout(function() {
-                currentWin.el.getElementsByTagName('input')[0].focus();
-            }, 0);
-
-            window.removeEventListener('mousemove', selectText);
-        }
+    }
+    if (window.getSelection().isCollapsed) {
+        setTimeout(function() {
+            currentWin.el.getElementsByTagName('input')[0].focus();
+        }, 0);
     }
 });
-
-function selectText(e) {
-    window.move = true;
-}
