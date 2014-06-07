@@ -45,6 +45,14 @@ app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.set('views', config.root + '/server/views');
 
+if (config.debug) {
+    // To disable Swig's cache
+    app.set('view cache', false);
+    swig.setDefaults({
+        cache: false
+    });
+}
+
 // Init Passport and set it to use sessions
 app.use(passport.initialize());
 app.use(passport.session());
