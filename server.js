@@ -45,6 +45,14 @@ app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.set('views', config.root + '/server/views');
 
+if (config.debug) {
+    // To disable Swig's cache
+    app.set('view cache', false);
+    swig.setDefaults({
+        cache: false
+    });
+}
+
 // Init Passport and set it to use sessions
 app.use(passport.initialize());
 app.use(passport.session());
@@ -61,7 +69,7 @@ dbMessage.setMaxListeners(0);
 db.rdsSubscriber.on('message', function(channel, message) {
     dbMessage.emit('message', db.redisStringToObject(message));
 });
-db.rdsSubscriber.on('request', function (channel, data) {
+db.rdsSubscriber.on('request', function(channel, data) {
     // body...
 });
 
@@ -72,7 +80,7 @@ io.use(passportSocketIo.authorize({
     secret: 'super secret',
     store: sessionStore,
     success: function(data, accept) {
-        db.getIdFromGoogId(data.user.id, function (err, id) {
+        db.getIdFromGoogId(data.user.id, function(err, id) {
             if (err) {
                 l(err);
             } else {
@@ -93,10 +101,10 @@ io.on('connection', function(socket) {
     socket.on('disconnect', function() {
         l('User disconnected:', socket.user.displayName);
     });
-    socket.once('ready', function () {
+    socket.once('ready', function() {
         l(socket.user.displayName, 'is ready');
-        dbMessage.on('message', function (data) {
-            db.userInChat(socket.user.uuid, data.chatId, function (err, bool) {
+        dbMessage.on('message', function(data) {
+            db.userInChat(socket.user.uuid, data.chatId, function(err, bool) {
                 if (err) {
                     //
                 } else {
@@ -105,39 +113,84 @@ io.on('connection', function(socket) {
             });
         });
     });
-    socket.on('getUserInfo', function (uuid) {
-        db.getUserInfo(uuid, function (err, res) {
-            if (err) {
-                //
-            } else {
-                var giveToClient = {};
-                giveToClient.username = res.username;
-                giveToClient.googName = res.googName;
-                giveToClient.googImgUrl = res.googImgUrl;
-                socket.emit('getUserInfo', giveToClient);
-            }
-        });
-    });
-    socket.on('message', function (data) {
-        l(socket.user.displayName, 'sent a message:', data);
-        db.userInChat(socket.user.uuid, data.chatId, function (err, bool) {
-            if (err) {
-                //
-            } else {
-                var newMessage = new db.Message(socket.user.uuid,
-                    data.chatId, data.message);
-                db.createMessage(newMessage, function (err, res) {
-                    if (err) {
-                        //
+    socket.on('getUserInfo', function(uuid) {
+        db.isBlacklisted(socket.user.uuid,
+            uuid, function(err, bool) {
+                if (err) {
+                    // handle it
+                } else {
+                    if (bool) {
+                        var giveToClient = {
+                            id: uuid,
+                            found: false
+                        };
+                        socket.emit('getUserInfo', giveToClient);
+                    } else {
+                        db.getUserInfo(uuid, function(err, res) {
+                            if (err) {
+                                //
+                            } else {
+                                var giveToClient = {
+                                    id: res.id,
+                                    username: res.username,
+                                    googName: res.googName,
+                                    googImgUrl: res.googImgUrl,
+                                    found: true
+                                };
+                                socket.emit('getUserInfo', giveToClient);
+                            }
+                        });
                     }
-                });
+                }
+            });
+    });
+    socket.on('message', function(data) {
+        l(socket.user.displayName, 'sent a message:', data);
+        db.userInChat(socket.user.uuid, data.chatId, function(err, bool) {
+            if (err) {
+                //
+            } else {
+                if (bool) {
+                    var newMessage = new db.Message(socket.user.uuid,
+                        data.chatId, data.message);
+                    db.createMessage(newMessage, function (err, res) {
+                        if (err) {
+                            //
+                        }
+                    });
+                }
             }
         });
     });
-    socket.on('createChat', function (data) {
-        db.areFriends(data.users, function (err, ob) {
+    socket.on('createChat', function(data) {
+        db.areFriends(data.users, function(err, ob) {
+            var sendFriendRequestCallback = function(err, res) {
+                if (err) {
+                    // handle
+                } else {
+                    //all is good
+                }
+            },
+                isBlacklistedLooper = function(person, nonfriend) {
+                    db.isBlacklisted(person, nonfriend,
+                        function(err, bool) {
+                            if (err) {
+                                // handle it
+                            } else {
+                                if (bool) {
+                                    //don't send requests, tell creator
+                                } else {
+                                    db.sendFriendRequest(person,
+                                        nonfriend,
+                                        sendFriendRequestCallback
+                                    );
+                                }
+                            }
+                        }
+                    );
+                };
             if (Object.keys(ob).length === 0) {
-                db.createChat(data.name, data.users, function (err, chatId) {
+                db.createChat(data.name, data.users, function(err, chatId) {
                     if (err) {
                         //
                     } else {
@@ -149,9 +202,66 @@ io.on('connection', function(socket) {
                     }
                 });
             } else { // not all participants are friends
-                //
+                for (var person in ob) {
+                    for (var nonfriend in ob[person]) {
+                        isBlacklistedLooper(person, ob[pserson][nonfriend]);
+                    }
+                }
             }
         });
+    });
+    socket.on('getIdFromUsername', function(username) {
+        db.getIdFromUsername(username, function(err, uuid) {
+            if (err) {
+                // handle it
+            } else {
+                db.isBlacklisted(socket.user.uuid, uuid, function(err, bool) {
+                    if (err) {
+                        //handle it
+                    } else {
+                        if (bool) {
+                            socket.emit('getIdFromUsername', {
+                                username: username,
+                                found: false
+                            });
+                        } else {
+                            socket.emit('getIdFromUsername', {
+                                username: username,
+                                found: true
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    });
+    socket.on('userSettings', function (specific) {
+        if (specific) {
+            db.getUserSettings(socket.user.uuid,
+                specific, function (err, result) {
+                    if (err) {
+                        // handle it
+                    } else {
+                        var giveSettings = {
+                            specific: specific,
+                            settings: result
+                        };
+                        socket.emit('userSettings', giveSettings);
+                    }
+                });
+        } else {
+            db.getUserSettings(socket.user.uuid, function (err, res) {
+                if (err) {
+                    // handle it
+                } else {
+                    var giveSettings = {
+                        specific: null,
+                        settings: res
+                    };
+                    socket.emit('userSettings', giveSettings);
+                }
+            });
+        }
     });
 });
 

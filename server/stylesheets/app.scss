@@ -7,6 +7,10 @@ $radius: 3px;
     @include user-select(none);
 }
 
+.selectable {
+    @include user-select(text !important);
+}
+
 body {
     font-family: 'Open Sans', sans-serif;
     background-color: #DDDDDD;
@@ -96,8 +100,6 @@ body {
 
                 .message-text {
                     font-size: 14px;
-                    @include user-select(text !important);
-
                 }
             }
 
@@ -160,7 +162,7 @@ body {
     }
 }
 
-#menu {
+#userInfo {
     background-color: #F0F0F0;
     position: fixed;
     top: 10px;
@@ -169,5 +171,12 @@ body {
     color: #404040;
     border: 1px solid #999999;
     border-radius: $radius;
-    cursor: pointer;
+
+    img {
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 5px;
+        height: 36px;
+        border-radius: $radius;
+    }
 }

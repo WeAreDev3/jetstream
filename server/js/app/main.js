@@ -30,7 +30,7 @@ window.addEventListener('mousedown', function(e) {
             app.chats[i].el.classList.remove('active');
         }
         chat.classList.add('active');
-        
+
     } else {
         for (i = app.chats.length - 1; i >= 0; i--) {
             app.chats[i].el.classList.remove('active');
@@ -39,9 +39,16 @@ window.addEventListener('mousedown', function(e) {
 });
 
 window.addEventListener('mouseup', function(e) {
+    var selectableMessages = document.querySelectorAll('.message-text');
+
+    for (var i = selectableMessages.length - 1; i >= 0; i--) {
+        selectableMessages[i].classList.add('selectable');
+    }
+
     if (window.currentWin !== undefined) {
         window.removeEventListener('mousemove', currentWin.drag);
     }
+    
     if (window.getSelection().isCollapsed) {
         setTimeout(function() {
             currentWin.el.getElementsByTagName('input')[0].focus();

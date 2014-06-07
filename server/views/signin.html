@@ -1,26 +1,17 @@
-<!DOCTYPE html>
-<html>
+{% extends 'layouts/default.html' %}
 
-<head>
-    <title>{{title}}</title>
+{% block meta %}
+<meta name="google-signin-clientid" content="{{auth.clientId}}">
+<meta name="google-signin-scope" content="profile">
+<meta name="google-signin-cookiepolicy" content="single_host_origin">
+<meta name="google-signin-callback" content="signinCallback">
+<meta name="google-signin-callback-url" content="{{auth.callback}}">
+{% endblock %}
 
-    <meta name="google-signin-clientid" content="1597733950-19qdccarm1fo5ojrde7cemhgrufk9ef7.apps.googleusercontent.com">
-    <meta name="google-signin-scope" content="profile">
-    <meta name="google-signin-cookiepolicy" content="single_host_origin">
-
-    <meta name="viewport" content="width=device-width, user-scalable=no">
-
-    <link rel="stylesheet" type="text/css" href="signin.css">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700|Grand+Hotel' rel='stylesheet' type='text/css'>
-</head>
-
-<body>
-    <div class="signin">
-        <h1>JetStream</h1>
-        <h2>chat. redefined.</h2>
-        <button id="signinButton">Sign in with Google+</button>
-    </div>
-    <script type="text/javascript" , src="signin.js"></script>
-</body>
-
-</html>
+{% block body %}
+<div class="signin">
+    <h1>JetStream</h1>
+    <h2>chat. redefined.</h2>
+    <button id="signinButton">Sign in with Google+</button>
+</div>
+{% endblock %}

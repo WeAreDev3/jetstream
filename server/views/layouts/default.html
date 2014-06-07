@@ -5,15 +5,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <meta name="google-signin-clientid" content="{{auth.clientId}}">
-    <meta name="google-signin-scope" content="profile">
-    <meta name="google-signin-cookiepolicy" content="single_host_origin">
-    <meta name="google-signin-callback" content="{{auth.callback}}">
+    {% block meta %}{% endblock %}
 
     <title>{{appName}} - {{title}}</title>
 
     {% for url in assets.css %}
-    <link rel="stylesheet" type="text/css" href="{{ url }}">
+    <link rel="stylesheet" type="text/css" href="{{url}}">
     {% endfor %}
 </head>
 
@@ -21,7 +18,7 @@
     {% block body %}{% endblock %}
 
     {% for url in assets.js %}
-    <script src="{{ url }}"></script>
+    <script src="{{url}}"></script>
     {% endfor %}
 </body>
 

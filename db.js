@@ -184,7 +184,8 @@ var def = {
                     } else {
                         message.timestamp = r.now();
                         def.rql(function (err, conn) {
-                            r.table('messages').insert(message).run(conn, function (err, result) {
+                            r.table('messages').insert(message)
+                            .run(conn, function (err, result) {
                                 conn.close();
                                 if (err) {
                                     callback(err);
@@ -314,7 +315,7 @@ var def = {
             i++;
         }
     },
-    getInfoFromUsername: function (username, callback) {
+    getIdFromUsername: function (username, callback) {
         def.rql(function (conn) {
             r.table('users').getAll(username, {index: 'username'})
             .run(conn, function (err, cursor) {
@@ -326,7 +327,7 @@ var def = {
                         if (err) {
                             callback(err);
                         } else {
-                            callback(null, list[0]);
+                            callback(null, list[0].id);
                         }
                     });
                 }
@@ -334,24 +335,114 @@ var def = {
         });
     },
     sendFriendRequest: function (fromId, toId, callback) {
-        def.rds.publish('request', {
+        var fastData = {
             from: fromId,
             timestamp: (new Date()).toString()
-        });
-        r.table('users').get(toId)('requests').insertAt(0, {
-            from: fromId,
-            timestamp: r.now()
-        }).run(conn, function (err, res) {
-            conn.close();
+            },
+            rData = {
+                from: fromId,
+                timestamp: r.now()
+            };
+        def.rds.publish('request', fastData);
+        def.requestExists(fromId, toId, function (err, bool, index) {
             if (err) {
                 callback(err);
             } else {
-                callback(null, res);
+                if (bool) {
+                    def.rql(function (conn) {
+                        r.table('users').get(toId)('requests')
+                        .changeAt(index, rData).run(conn, function (err, res) {
+                            if (err) {
+                                callback(err);
+                            } else {
+                                callback(null, res);
+                            }
+                        });
+                    });
+                } else {
+                    def.rql(function (conn) {
+                        r.table('users').get(toId)('requests').append(rData)
+                        .run(conn, function (err, res) {
+                            conn.close();
+                            if (err) {
+                                callback(err);
+                            } else {
+                                callback(null, res);
+                            }
+                        });
+                    });
+                }
             }
         });
     },
-    isBlacklisted: function (fromId, toId, callback) {
-        //
+    requestExists: function (fromId, toId, callback) {
+        def.rql(function (conn) {
+            r.table('users').get(toId)('requests')
+            .run(conn, function (err, res) {
+                conn.close();
+                if (err) {
+                    callback(err);
+                } else {
+                    var found = false,
+                        index = null;
+                    for (var request in res) {
+                        if (res[request].from === fromId) {
+                            found = true;
+                            index = request;
+                            break;
+                        }
+                    }
+                    if (found) {
+                        callback(null, true, index);
+                    } else {
+                        callback(null, false);
+                    }
+                }
+            });
+        });
+    },
+    isBlacklisted: function (potentialBlacklistee, normalGuy, callback) {
+        def.rql(function (conn) {
+            r.table('users').get(normalGuy)('blacklist')
+            .run(conn, function (err, res) {
+                if (err) {
+                    callback(err);
+                } else {
+                    conn.close();
+                    if (res.indexOf(potentialBlacklistee) >= 0) {
+                        callback(null, true);
+                    } else {
+                        callback(null, false);
+                    }
+                }
+            });
+        });
+    },
+    getUserSettings: function (uuid, specific, callback) {
+        if ((typeof specific) == 'string') {
+            def.rql(function (conn) {
+                r.table('users').get(uuid)('settings')(specific)
+                .run(conn, function (err, result) {
+                    conn.close();
+                    if (err) {
+                        callback(err);
+                    } else {
+                        callback(null, result);
+                    }
+                });
+            });
+        } else {
+            def.rql(function (conn) {
+                r.table('users').get(uuid)('settings')
+                .run(conn, function (err, result) {
+                    if (err) {
+                        specific(err);
+                    } else {
+                        specific(null, result);
+                    }
+                });
+            });
+        }
     }
 };
 
