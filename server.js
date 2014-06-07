@@ -142,13 +142,15 @@ io.on('connection', function(socket) {
             if (err) {
                 //
             } else {
-                var newMessage = new db.Message(socket.user.uuid,
-                    data.chatId, data.message);
-                db.createMessage(newMessage, function (err, res) {
-                    if (err) {
-                        //
-                    }
-                });
+                if (bool) {
+                    var newMessage = new db.Message(socket.user.uuid,
+                        data.chatId, data.message);
+                    db.createMessage(newMessage, function (err, res) {
+                        if (err) {
+                            //
+                        }
+                    });
+                }
             }
         });
     });
