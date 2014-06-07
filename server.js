@@ -106,17 +106,35 @@ io.on('connection', function(socket) {
         });
     });
     socket.on('getUserInfo', function (uuid) {
-        db.getUserInfo(uuid, function (err, res) {
-            if (err) {
-                //
-            } else {
-                var giveToClient = {};
-                giveToClient.username = res.username;
-                giveToClient.googName = res.googName;
-                giveToClient.googImgUrl = res.googImgUrl;
-                socket.emit('getUserInfo', giveToClient);
-            }
-        });
+        db.isBlacklisted(socket.user.uuid,
+            uuid, function (err, bool) {
+                if (err) {
+                    // handle it
+                } else {
+                    if (bool) {
+                        var giveToClient = {
+                            id: uuid,
+                            found: false
+                        };
+                        socket.emit('getUserInfo', giveToClient);
+                    } else {
+                        db.getUserInfo(uuid, function (err, res) {
+                            if (err) {
+                                //
+                            } else {
+                                var giveToClient = {
+                                    id: res.id,
+                                    username: res.username,
+                                    googName: res.googName,
+                                    googImgUrl: res.googImgUrl,
+                                    found: true
+                                };
+                                socket.emit('getUserInfo', giveToClient);
+                            }
+                        });
+                    }
+                }
+            });
     });
     socket.on('message', function (data) {
         l(socket.user.displayName, 'sent a message:', data);
@@ -137,12 +155,30 @@ io.on('connection', function(socket) {
     socket.on('createChat', function (data) {
         db.areFriends(data.users, function (err, ob) {
             var sendFriendRequestCallback = function (err, res) {
-                if (err) {
-                    // handle
-                } else {
-                    //all is good
-                }
-            };
+                    if (err) {
+                        // handle
+                    } else {
+                        //all is good
+                    }
+                },
+                isBlacklistedLooper = function (person, nonfriend) {
+                    db.isBlacklisted(person, nonfriend,
+                        function (err, bool) {
+                            if (err) {
+                                // handle it
+                            } else {
+                                if (bool) {
+                                    //don't send requests, tell creator
+                                } else {
+                                    db.sendFriendRequest(person,
+                                        nonfriend,
+                                        sendFriendRequestCallback
+                                    );
+                                }
+                            }
+                        }
+                    );
+                };
             if (Object.keys(ob).length === 0) {
                 db.createChat(data.name, data.users, function (err, chatId) {
                     if (err) {
@@ -158,24 +194,34 @@ io.on('connection', function(socket) {
             } else { // not all participants are friends
                 for (var person in ob) {
                     for (var nonfriend in ob[person]) {
-                        db.isBlacklisted(person, ob[person][nonfriend],
-                            function (err, bool) {
-                                if (err) {
-                                    // handle it
-                                } else {
-                                    if (bool) {
-                                        //don't send requests, tell creator
-                                    } else {
-                                        db.sendFriendRequest(person,
-                                            ob[pserson][nonfriend],
-                                            sendFriendRequestCallback
-                                        );
-                                    }
-                                }
-                            }
-                        );
+                        isBlacklistedLooper(person, ob[pserson][nonfriend]);
                     }
                 }
+            }
+        });
+    });
+    socket.on('getIdFromUsername', function (username) {
+        db.getIdFromUsername(username, function (err, uuid) {
+            if (err) {
+                // handle it
+            } else {
+                db.isBlacklisted(socket.user.uuid, uuid, function (err, bool) {
+                    if (err) {
+                        //handle it
+                    } else {
+                        if (bool) {
+                            socket.emit('getIdFromUsername', {
+                                username: username,
+                                found: false
+                            });
+                        } else {
+                            socket.emit('getIdFromUsername', {
+                                username: username,
+                                found: true
+                            });
+                        }
+                    }
+                });
             }
         });
     });

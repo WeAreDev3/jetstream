@@ -315,7 +315,7 @@ var def = {
             i++;
         }
     },
-    getInfoFromUsername: function (username, callback) {
+    getIdFromUsername: function (username, callback) {
         def.rql(function (conn) {
             r.table('users').getAll(username, {index: 'username'})
             .run(conn, function (err, cursor) {
@@ -327,7 +327,7 @@ var def = {
                         if (err) {
                             callback(err);
                         } else {
-                            callback(null, list[0]);
+                            callback(null, list[0].id);
                         }
                     });
                 }
@@ -401,15 +401,15 @@ var def = {
             });
         });
     },
-    isBlacklisted: function (fromId, toId, callback) {
+    isBlacklisted: function (potentialBlacklistee, normalGuy, callback) {
         def.rds(function (conn) {
-            r.table('users').get(toId)('blacklist')
+            r.table('users').get(normalGuy)('blacklist')
             .run(conn, function (err, res) {
                 if (err) {
                     callback(err);
                 } else {
                     conn.close();
-                    if (res.indexOf(fromId) >= 0) {
+                    if (res.indexOf(potentialBlacklistee) >= 0) {
                         callback(null, true);
                     } else {
                         callback(null, false);
