@@ -7,6 +7,10 @@ $radius: 3px;
     @include user-select(none);
 }
 
+.selectable {
+    @include user-select(text !important);
+}
+
 body {
     font-family: 'Open Sans', sans-serif;
     background-color: #DDDDDD;
@@ -96,8 +100,6 @@ body {
 
                 .message-text {
                     font-size: 14px;
-                    @include user-select(text !important);
-
                 }
             }
 

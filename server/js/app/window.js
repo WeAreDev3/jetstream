@@ -11,4 +11,8 @@ Win.prototype.handleDrag = function (e) {
     this.el.style.left = rect.left + e.clientX - this.mouseX + 'px';
     this.mouseY = e.clientY;
     this.mouseX = e.clientX;
+        selectableMessages = document.querySelectorAll('.selectable');
+    for (var i = selectableMessages.length - 1; i >= 0; i--) {
+        selectableMessages[i].classList.remove('selectable');
+    }
 };

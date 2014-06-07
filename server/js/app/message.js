@@ -32,7 +32,7 @@ Message.prototype.initElement = function() {
     user.classList.add('message-user');
     date.classList.add('message-date');
     time.classList.add('message-time');
-    message.classList.add('message-text');
+    message.classList.add('message-text', 'selectable');
     user.textContent = this.user.displayName;
     date.textContent = parseDate(this.timestamp);
     time.textContent = parseTime(this.timestamp);
