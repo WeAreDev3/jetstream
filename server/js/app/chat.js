@@ -36,9 +36,10 @@ Chat.prototype.initElement = function(parent) {
 };
 
 Chat.prototype.checkInput = function(e) {
-    var input = this.el.getElementsByTagName('input')[0];
-    if (e.keyCode === 13 && input.value !== '') {
-        new Message({
+    var input = this.el.getElementsByTagName('input')[0],
+        message;
+    if (e.keyCode === 13 && input.value.trim() !== '') {
+        message = new Message({
             id: Math.floor(Math.random() * 1000),
             message: input.value,
             chatId: this.id,
@@ -46,5 +47,7 @@ Chat.prototype.checkInput = function(e) {
             timestamp: (new Date()).toISOString()
         });
         input.value = '';
+        console.log('Sent a message:', message);
+        socket.emit('message', message);
     }
 };

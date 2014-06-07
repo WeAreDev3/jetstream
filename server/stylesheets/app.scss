@@ -26,12 +26,13 @@ body {
         border: 1px solid #606060;
         padding-bottom: 40px;
 
-
         footer {
             opacity: 1;
             input {
                 cursor: text;
-                box-shadow: 0 0 1px 1px #4d90fe;
+                &:focus {
+                    box-shadow: 0 0 1px 1px #4d90fe;                    
+                }
             }
         }
     }
@@ -69,7 +70,7 @@ body {
 
             .message-content {
                 max-width: 75%;
-                white-space: normal;
+                white-space: pre-wrap;
                 padding: 5px;
                 background-color: rgb(255,255,255);
                 border-bottom: 2px solid rgba(0,0,0,0.1);
@@ -95,6 +96,8 @@ body {
 
                 .message-text {
                     font-size: 14px;
+                    @include user-select(text !important);
+
                 }
             }
 
@@ -153,7 +156,18 @@ body {
             font-size: 14px;
             cursor: default;
             outline: none;
-            transition: .25s;
         }
     }
+}
+
+#menu {
+    background-color: #F0F0F0;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 8px;
+    color: #404040;
+    border: 1px solid #999999;
+    border-radius: $radius;
+    cursor: pointer;
 }
