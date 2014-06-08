@@ -24,7 +24,7 @@ var express = require('express'),
 app.use(express.static(config.root + '/public'));
 app.use(express.static(config.root + '/public/css'));
 app.use(express.static(config.root + '/public/js'));
-app.use('fonts', express.static(config.root + '/fonts'));
+app.use('/fonts', express.static(config.root + '/fonts'));
 
 // Log every request
 app.use(morgan('dev'));
@@ -117,7 +117,7 @@ io.on('connection', function(socket) {
         db.isBlacklisted(socket.user.uuid,
             uuid, function(err, bool) {
                 if (err) {
-                    socket.emit('getUserInfo', {
+                    socket.emit('getOtherUserInfo', {
                         uuid: data.tempId,
                         error: 'Chat did not exist'
                     });
@@ -127,7 +127,7 @@ io.on('connection', function(socket) {
                             id: uuid,
                             found: false
                         };
-                        socket.emit('getUserInfo', giveToClient);
+                        socket.emit('getOtherUserInfo', giveToClient);
                     } else {
                         db.getOtherUserInfo(uuid, function(err, res) {
                             if (err) {
@@ -140,7 +140,7 @@ io.on('connection', function(socket) {
                                     googImgUrl: res.googImgUrl,
                                     found: true
                                 };
-                                socket.emit('getUserInfo', giveToClient);
+                                socket.emit('getOtherUserInfo', giveToClient);
                             }
                         });
                     }
@@ -257,12 +257,14 @@ io.on('connection', function(socket) {
                         if (bool) {
                             socket.emit('getIdFromUsername', {
                                 username: username,
-                                found: false
+                                found: false,
+                                id: null
                             });
                         } else {
                             socket.emit('getIdFromUsername', {
                                 username: username,
-                                found: true
+                                found: true,
+                                id: uuid
                             });
                         }
                     }
