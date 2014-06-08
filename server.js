@@ -166,7 +166,7 @@ io.on('connection', function(socket) {
                 if (bool) {
                     var newMessage = new db.Message(socket.user.uuid,
                         data.chatId, data.message, data.tempId);
-                    db.createMessage(newMessage, function (err, res) {
+                    db.createMessage(newMessage, function(err, res) {
                         if (err) {
                             if (false) {
                                 //
@@ -184,10 +184,10 @@ io.on('connection', function(socket) {
     });
     socket.on('createChat', function(data) {
         db.areFriends(data.users, function(err, ob) {
-            var sendFriendRequests = function (person, nonfriend) {
+            var sendFriendRequests = function(person, nonfriend) {
                 db.sendFriendRequest(person,
                     nonfriend,
-                    function (err, res) {
+                    function(err, res) {
                         if (err) {
                             // handle
                         } else {
@@ -204,7 +204,7 @@ io.on('connection', function(socket) {
                         function(err, bool) {
                             if (err) {
                                 socket.emit('createChat', {
-                                    tempId:data.tempId,
+                                    tempId: data.tempId,
                                     dbError: err
                                 });
                             } else {
@@ -270,10 +270,10 @@ io.on('connection', function(socket) {
             }
         });
     });
-    socket.on('userSettings', function (specific) {
+    socket.on('userSettings', function(specific) {
         if (specific) {
             db.getUserSettings(socket.user.uuid,
-                specific, function (err, result) {
+                specific, function(err, result) {
                     if (err) {
                         // handle it
                     } else {
@@ -285,7 +285,7 @@ io.on('connection', function(socket) {
                     }
                 });
         } else {
-            db.getUserSettings(socket.user.uuid, function (err, res) {
+            db.getUserSettings(socket.user.uuid, function(err, res) {
                 if (err) {
                     // handle it
                 } else {
@@ -298,8 +298,17 @@ io.on('connection', function(socket) {
             });
         }
     });
-    socket.on('getUsersChats', function () {
-        db.getUsersChats(socket.user.uuid, function (err, resList) {
+    socket.on('getUsersFriends', function() {
+        db.getUsersFriends(socket.user.uuid, function(err, resList) {
+            if (err) {
+                // handle it
+            } else {
+                socket.emit('getUsersFriends', resList);
+            }
+        });
+    });
+    socket.on('getUsersChats', function() {
+        db.getUsersChats(socket.user.uuid, function(err, resList) {
             if (err) {
                 // handle it
             } else {
@@ -307,8 +316,8 @@ io.on('connection', function(socket) {
             }
         });
     });
-    socket.on('getChatInfo', function (chatId) {
-        db.getChatInfo(chatId, function (err, info) {
+    socket.on('getChatInfo', function(chatId) {
+        db.getChatInfo(chatId, function(err, info) {
             if (err) {
                 // handle it
             } else {
@@ -316,15 +325,15 @@ io.on('connection', function(socket) {
             }
         });
     });
-    socket.on('setUsernamefromId', function (username) {
-        db.isUsernameTaken(username, function (err, bool) {
+    socket.on('setUsernamefromId', function(username) {
+        db.isUsernameTaken(username, function(err, bool) {
             if (err) {
                 //handle
             } else {
                 if (bool) {
                     socket.emit('setUsernamefromId', false);
                 } else {
-                    db.setUsernamefromId(socket.user.uuid, username, function (err, bool) {
+                    db.setUsernamefromId(socket.user.uuid, username, function(err, bool) {
                         if (err) {
                             // handle
                         } else {
@@ -335,15 +344,12 @@ io.on('connection', function(socket) {
             }
         });
     });
-    socket.on('isUsernameTaken', function (username) {
-        db.isUsernameTaken(username, function (err, bool) {
+    socket.on('isUsernameTaken', function(username) {
+        db.isUsernameTaken(username, function(err, bool) {
             if (err) {
                 // handle
             } else {
-                socket.emit('isUsernameTaken', {
-                    username: username,
-                    taken: bool
-                });
+                socket.emit('isUsernameTaken', username, bool);
             }
         });
     });
