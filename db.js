@@ -31,7 +31,7 @@ var def = {
             }
         });
     },
-    getUserInfo: function(userid, callback) {
+    getOtherUserInfo: function(userid, callback) {
         def.rql(function(conn) {
             r.table('users').get(userid)
             .run(conn, function(err, results) {
@@ -44,7 +44,7 @@ var def = {
             });
         });
     },
-    getConversationInfo: function(chatId, callback) {
+    getChatInfo: function(chatId, callback) {
         def.rql(function(conn) {
             r.table('chats').get(chatId)
             .run(conn, function(err, result) {

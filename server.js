@@ -113,7 +113,7 @@ io.on('connection', function(socket) {
             });
         });
     });
-    socket.on('getUserInfo', function(uuid) {
+    socket.on('getOtherUserInfo', function(uuid) {
         db.isBlacklisted(socket.user.uuid,
             uuid, function(err, bool) {
                 if (err) {
@@ -129,7 +129,7 @@ io.on('connection', function(socket) {
                         };
                         socket.emit('getUserInfo', giveToClient);
                     } else {
-                        db.getUserInfo(uuid, function(err, res) {
+                        db.getOtherUserInfo(uuid, function(err, res) {
                             if (err) {
                                 //
                             } else {
@@ -307,6 +307,15 @@ io.on('connection', function(socket) {
             }
         });
     });
+    socket.on('getChatInfo', function (chatId) {
+        db.getChatInfo(chatId, function (err, info) {
+            if (err) {
+                // handle it
+            } else {
+                socket.emit('getchatinfo')
+            }
+        })
+    })
 });
 
 // Open the ports for business
