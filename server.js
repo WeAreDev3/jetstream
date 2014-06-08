@@ -298,6 +298,15 @@ io.on('connection', function(socket) {
             });
         }
     });
+    socket.on('getUsersChats', function () {
+        db.getUsersChats(socket.user.uuid, function (err, resList) {
+            if (err) {
+                // handle it
+            } else {
+                socket.emit('getUsersChats', resList);
+            }
+        });
+    });
 });
 
 // Open the ports for business

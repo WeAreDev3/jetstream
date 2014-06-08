@@ -445,6 +445,18 @@ var def = {
                 });
             });
         }
+    },
+    getUsersChats: function (uuid, callback) {
+        def.rql(function (conn) {
+            r.table('users').get(uuid)('chatList')
+            .run(conn, function (err, resList) {
+                if (err) {
+                    callback(err);
+                } else {
+                    callback(null, resList);
+                }
+            });
+        });
     }
 };
 
