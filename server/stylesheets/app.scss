@@ -42,12 +42,14 @@ body {
     }
 
     header {
+        position: relative;
         background-color: rgba(0,0,0,0.03);
         padding: 10px;
         color: rgba(0,0,0,0.7);
         font-size: 14px;
         font-weight: 800;
         cursor: default;
+        box-shadow: 0 2px rgba(0,0,0,0.3);
     }
 
     section {
@@ -58,6 +60,7 @@ body {
         img {
             width: 35px;
             height: 35px;
+            border-radius: $radius;
         }
 
         .message {
@@ -105,6 +108,7 @@ body {
 
             &.left .message-content {
                 margin-left: 10px;
+                border-radius: 0 3px 3px 3px;
 
                 &::before {
                     content: "";
@@ -122,6 +126,8 @@ body {
 
             &.right .message-content {
                 margin-right: 10px;
+                border-radius: 3px 0 3px 3px;
+                background-color: #F1FBFF;
 
                 &::before {
                     content: "";
@@ -131,7 +137,7 @@ body {
                     float: right;
                     margin-left: 5px;
                     border-bottom: 10px solid transparent;
-                    border-left: 10px solid #FFFFFF;
+                    border-left: 10px solid #F1FBFF;
                     margin-right: -15px;
                     margin-top: -5px;
                 }
