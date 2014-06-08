@@ -316,6 +316,25 @@ io.on('connection', function(socket) {
             }
         });
     });
+    socket.on('setUsernamefromId', function (username) {
+        db.isUsernameTaken(username, function (err, bool) {
+            if (err) {
+                //handle
+            } else {
+                if (bool) {
+                    socket.emit('setUsernamefromId', false);
+                } else {
+                    db.setUsernamefromId(socket.user.uuid, username, function (err, bool) {
+                        if (err) {
+                            // handle
+                        } else {
+                            socket.emit('setUsernamefromId', bool);
+                        }
+                    });
+                }
+            }
+        });
+    });
 });
 
 // Open the ports for business
