@@ -321,11 +321,14 @@ var def = {
         def.rql(function (conn) {
             r.table('users').getAll(username, {index: 'username'})
             .run(conn, function (err, cursor) {
-                conn.close();
                 if (err) {
+                    cursor.close();
+                    conn.close();
                     callback(err);
                 } else {
                     cursor.toArray(function (err, list) {
+                        cursor.close();
+                        conn.close();
                         if (err) {
                             callback(err);
                         } else {
@@ -454,6 +457,28 @@ var def = {
                     callback(err);
                 } else {
                     callback(null, resList);
+                }
+            });
+        });
+    },
+    getUsernameFromGoogId: function (googId, callback) {
+        def.rql(function (conn) {
+            r.table('users').getAll(googId, {index: 'googId'})
+            .run(conn, function (err, cursor) {
+                if (err) {
+                    cursor.close();
+                    conn.close();
+                    callback(err);
+                } else {
+                    cursor.toArray(function (err, list) {
+                        cursor.close();
+                        conn.close();
+                        if (err) {
+                            callback(err);
+                        } else {
+                            callback(null, list);
+                        }
+                    });
                 }
             });
         });

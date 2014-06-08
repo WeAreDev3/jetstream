@@ -312,10 +312,10 @@ io.on('connection', function(socket) {
             if (err) {
                 // handle it
             } else {
-                socket.emit('getchatinfo')
+                socket.emit('getChatInfo', info);
             }
-        })
-    })
+        });
+    });
 });
 
 // Open the ports for business
