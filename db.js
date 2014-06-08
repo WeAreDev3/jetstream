@@ -476,7 +476,7 @@ var def = {
                         if (err) {
                             callback(err);
                         } else {
-                            callback(null, list);
+                            callback(null, list[0].username);
                         }
                     });
                 }
