@@ -1,0 +1,33 @@
+body {
+    font-family: sans-serif;
+}
+.inputHolder {
+    position: relative;
+    display: inline-block;
+}
+#usernameInput {
+    outline: none;
+    font-size: 13px;
+    border: 1px solid #000;
+    padding-right: 18px;
+    &:focus {
+        border-color: #4d90fe;
+    }
+}
+#usernameCheck {
+    position: absolute;
+    height: 10px;
+    width: 10px;
+    background-color: gray;
+    border-radius: 5px;
+    top: 7px;
+    right: 7px;
+
+    &.ok {
+        background-color: lime;
+    }
+
+    &.err {
+        background-color: red;
+    }
+}

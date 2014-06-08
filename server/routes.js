@@ -1,5 +1,6 @@
 var config = require('../config'),
     l = require('../log'),
+    db = require('../db'),
     googleapis = require('googleapis');
 
 
@@ -10,6 +11,25 @@ function ensureAuthenticated(req, res, next) {
         return next();
     }
     res.redirect('/signin');
+}
+
+function hasUsername (req, res, next) {
+    db.getUsernameFromGoogId(req.user.id, function(error, username) {
+        l(username);
+        if (username) {
+            next();
+        } else {
+            res.render('setUpUsername', {
+                appName: config.appName,
+                title: 'Set Up a Username',
+                user: req.user,
+                assets: {
+                    css: ['setUpUsername.css'],
+                    js: ['/socket.io/socket.io.js', 'setUpUsername.js']
+                }
+            });
+        }
+    });
 }
 
 module.exports = function(app, passport) {
@@ -40,7 +60,7 @@ module.exports = function(app, passport) {
         });
     });
 
-    app.route('/app').get(ensureAuthenticated, function(req, res) {
+    app.route('/app').get(ensureAuthenticated, hasUsername, function(req, res) {
         res.render('app', {
             appName: config.appName,
             title: config.appName,

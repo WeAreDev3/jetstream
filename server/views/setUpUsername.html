@@ -1,0 +1,13 @@
+{% extends 'layouts/default.html' %}
+
+{% block body %}
+<h1>Welcome, {{user.displayName}}.</h1>
+Please set up a username:
+<form name="checkUsername">
+    Username: <div class="inputHolder">
+        <input type="text" id="usernameInput">
+        <span id="usernameCheck" title="No username"></span>
+    </div>
+    <input type="button" id="usernameSubmit" value="Submit">
+</form>
+{% endblock %}
