@@ -333,7 +333,11 @@ var def = {
                         if (err) {
                             callback(err);
                         } else {
-                            callback(null, list[0].id);
+                            if (list.length) {
+                                callback(null, list[0].id);
+                            } else {
+                                callback(new Error('No user found'));
+                            }
                         }
                     });
                 }
@@ -409,7 +413,7 @@ var def = {
     },
     isBlacklisted: function (potentialBlacklistee, normalGuy, callback) {
         def.rql(function (conn) {
-            r.table('users').get(normalGuy)('blacklist')
+            r.table('users').get(normalGuy)('blackList')
             .run(conn, function (err, res) {
                 if (err) {
                     callback(err);
