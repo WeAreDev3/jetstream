@@ -504,7 +504,7 @@ var def = {
                 if (err) {
                     callback(err);
                 } else {
-                    if (uuid) {
+                    if (theUsername) {
                         callback(null, true);
                     } else {
                         callback(null, false);
