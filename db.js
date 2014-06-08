@@ -160,11 +160,12 @@ var def = {
         });
     },
 
-    Message: function (initUserId, chatId, message) {
+    Message: function (initUserId, chatId, message, tempId) {
         this.user = initUserId;
         this.chatId = chatId;
         this.message = message;
         this.id = uuid.v4();
+        this.tempId = tempId;
     },
 
     createMessage: function (message, callback) { // takes Message
@@ -183,6 +184,7 @@ var def = {
                         conn.close();
                     } else {
                         message.timestamp = r.now();
+                        delete message.tempId;
                         def.rql(function (err, conn) {
                             r.table('messages').insert(message)
                             .run(conn, function (err, result) {

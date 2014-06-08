@@ -117,7 +117,10 @@ io.on('connection', function(socket) {
         db.isBlacklisted(socket.user.uuid,
             uuid, function(err, bool) {
                 if (err) {
-                    // handle it
+                    socket.emit('getUserInfo', {
+                        uuid: data.tempId,
+                        error: 'Chat did not exist'
+                    });
                 } else {
                     if (bool) {
                         var giveToClient = {
@@ -148,14 +151,31 @@ io.on('connection', function(socket) {
         l(socket.user.displayName, 'sent a message:', data);
         db.userInChat(socket.user.uuid, data.chatId, function(err, bool) {
             if (err) {
-                //
+                if (err.message === 'Cannot perform get_field on a non-object non-sequence `null`.') {
+                    socket.emit('message', {
+                        tempId: data.tempId,
+                        error: 'Chat did not exist'
+                    });
+                } else { // catch all
+                    socket.emit('message', {
+                        tempId: data.tempId,
+                        error: err
+                    });
+                }
             } else {
                 if (bool) {
                     var newMessage = new db.Message(socket.user.uuid,
-                        data.chatId, data.message);
+                        data.chatId, data.message, data.tempId);
                     db.createMessage(newMessage, function (err, res) {
                         if (err) {
-                            //
+                            if (false) {
+                                //
+                            } else { // catch all
+                                socket.emit('message', {
+                                    tempId: data.tempId,
+                                    error: err
+                                });
+                            }
                         }
                     });
                 }
@@ -164,26 +184,40 @@ io.on('connection', function(socket) {
     });
     socket.on('createChat', function(data) {
         db.areFriends(data.users, function(err, ob) {
-            var sendFriendRequestCallback = function(err, res) {
-                if (err) {
-                    // handle
-                } else {
-                    //all is good
-                }
+            var sendFriendRequests = function (person, nonfriend) {
+                db.sendFriendRequest(person,
+                    nonfriend,
+                    function (err, res) {
+                        if (err) {
+                            // handle
+                        } else {
+                            socket.emit('createChat', {
+                                tempId: data.tempId,
+                                mustFriend: [person, nonfriend]
+                            });
+                        }
+                    }
+                );
             },
                 isBlacklistedLooper = function(person, nonfriend) {
                     db.isBlacklisted(person, nonfriend,
                         function(err, bool) {
                             if (err) {
-                                // handle it
+                                socket.emit('createChat', {
+                                    tempId:data.tempId,
+                                    dbError: err
+                                });
                             } else {
                                 if (bool) {
-                                    //don't send requests, tell creator
+                                    socket.emit('createChat', {
+                                        tempId: data.tempId,
+                                        blocked: {
+                                            blocker: person,
+                                            blockee: nonfriend
+                                        }
+                                    });
                                 } else {
-                                    db.sendFriendRequest(person,
-                                        nonfriend,
-                                        sendFriendRequestCallback
-                                    );
+                                    sendFriendRequests(person, nonfriend);
                                 }
                             }
                         }
@@ -196,7 +230,8 @@ io.on('connection', function(socket) {
                     } else {
                         var chatConfirm = {
                             name: data.name,
-                            id: chatId
+                            id: chatId,
+                            tempId: tempId
                         };
                         socket.emit('createChat', chatConfirm);
                     }
