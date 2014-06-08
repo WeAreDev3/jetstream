@@ -47,11 +47,11 @@ window.addEventListener('mouseup', function(e) {
 
     if (window.currentWin !== undefined) {
         window.removeEventListener('mousemove', currentWin.drag);
-    }
-    
-    if (window.getSelection().isCollapsed) {
-        setTimeout(function() {
-            currentWin.el.getElementsByTagName('input')[0].focus();
-        }, 0);
+
+        if (window.getSelection().isCollapsed) {
+            setTimeout(function() {
+                currentWin.el.getElementsByTagName('input')[0].focus();
+            }, 0);
+        }
     }
 });
