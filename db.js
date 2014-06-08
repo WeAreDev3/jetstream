@@ -482,6 +482,67 @@ var def = {
                 }
             });
         });
+    },
+    isUsernameSet: function (uuid, callback) {
+        def.rql(function (conn) {
+            r.table('users').get(uuid)('username')
+            .run(conn, function (err, theUsername) {
+                conn.close();
+                if (err) {
+                    callback(err);
+                } else {
+                    if (uuid) {
+                        callback(null, true);
+                    } else {
+                        callback(null, false);
+                    }
+                }
+            });
+        });
+    },
+    setUsernamefromId: function (uuid, newUsername, callback) {
+        def.isUsernameSet(uuid, function (err, bool) {
+            if (err) {
+                callback(err);
+            } else {
+                if (bool) {
+                    callback(null, false);
+                } else {
+                    def.rql(function (conn) {
+                        r.table('users').get(uuid).update({
+                            username: newUsername
+                        }).run(conn, function (err, res) {
+                            conn.close();
+                            if (err) {
+                                callback(err);
+                            } else {
+                                callback(null, true);
+                            }
+                        });
+                    });
+                }
+            }
+        });
+    },
+    isUsernameTaken: function (username, callback) {
+        def.rql(function (conn) {
+            r.table('users').getAll(username, {index: 'username'})
+            .count().run(conn, function (err, count) {
+                conn.close();
+                if (err) {
+                    callback(err);
+                } else {
+                    if (count === 0) {
+                        callback(null, false);
+                    } else if (count === 1) {
+                        callback(null, true);
+                    } else {
+                        l('something VERY bad happened. there are dup usernames');
+                        callback(new Error('dup usernames:' + username));
+                    }
+                }
+            });
+        });
     }
 };
 
