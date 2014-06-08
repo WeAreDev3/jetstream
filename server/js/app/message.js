@@ -28,6 +28,7 @@ Message.prototype.initElement = function() {
     container.id = this.id;
     container.classList.add('message', (this.user.username === currentUser.username ? 'right' : 'left'));
     pic.src = this.user.imgUrl;
+    pic.classList.add('profilePic');
     content.classList.add('message-content');
     user.classList.add('message-user');
     date.classList.add('message-date');
