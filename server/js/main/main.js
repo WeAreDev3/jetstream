@@ -6,6 +6,11 @@ window.addEventListener('DOMContentLoaded', function() {
     if (inApp) {
         window.socket = io();
         socket.emit('ready');
+        socket.emit('getUsersFriends');
+        socket.on('getUsersFriends', function(friends) {
+            new Win();
+            console.log(friends);
+        });
     }
 
 });
