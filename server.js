@@ -335,6 +335,18 @@ io.on('connection', function(socket) {
             }
         });
     });
+    socket.on('isUsernameTaken', function (username) {
+        db.isUsernameTaken(username, function (err, bool) {
+            if (err) {
+                // handle
+            } else {
+                socket.emit('isUsernameTaken', {
+                    username: username,
+                    taken: bool
+                });
+            }
+        });
+    });
 });
 
 // Open the ports for business
