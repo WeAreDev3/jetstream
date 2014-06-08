@@ -5,7 +5,8 @@ var redis = require('redis'),
     l = require('./log'),
     config = require('./config'),
     r = require('rethinkdb'),
-    uuid = require('uuid');
+    uuid = require('uuid'),
+    val = require('validator');
 
 
 // def
@@ -501,28 +502,32 @@ var def = {
         });
     },
     setUsernamefromId: function (uuid, newUsername, callback) {
-        def.isUsernameSet(uuid, function (err, bool) {
-            if (err) {
-                callback(err);
-            } else {
-                if (bool) {
-                    callback(null, false);
+        if (val.isAlphanumeric(newUsername) && username.length != 0) {
+            def.isUsernameSet(uuid, function (err, bool) {
+                if (err) {
+                    callback(err);
                 } else {
-                    def.rql(function (conn) {
-                        r.table('users').get(uuid).update({
-                            username: newUsername
-                        }).run(conn, function (err, res) {
-                            conn.close();
-                            if (err) {
-                                callback(err);
-                            } else {
-                                callback(null, true);
-                            }
+                    if (bool) {
+                        callback(null, false);
+                    } else {
+                        def.rql(function (conn) {
+                            r.table('users').get(uuid).update({
+                                username: newUsername
+                            }).run(conn, function (err, res) {
+                                conn.close();
+                                if (err) {
+                                    callback(err);
+                                } else {
+                                    callback(null, true);
+                                }
+                            });
                         });
-                    });
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            callback(null, false);
+        }
     },
     isUsernameTaken: function (username, callback) {
         def.rql(function (conn) {
