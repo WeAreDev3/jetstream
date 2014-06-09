@@ -490,10 +490,15 @@ var def = {
                     cursor.toArray(function (err, list) {
                         cursor.close();
                         conn.close();
+                        l(list, 'here!!!');
                         if (err) {
                             callback(err);
                         } else {
-                            callback(null, list[0].username);
+                            if (list.length === 0) {
+                                callback('nothing here!');
+                            } else {
+                                callback(null, list[0].username);
+                            }
                         }
                     });
                 }
