@@ -490,7 +490,6 @@ var def = {
                     cursor.toArray(function (err, list) {
                         cursor.close();
                         conn.close();
-                        l(list, 'here!!!');
                         if (err) {
                             callback(err);
                         } else {
