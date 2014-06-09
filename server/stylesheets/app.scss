@@ -204,7 +204,7 @@ body {
         width: 90%;
         margin: 0 auto;
         border-radius: 0 0 3px 3px;
-        cursor: default;
+        cursor: pointer;
         transition: opacity 0.25s, margin-top 0.25s;
 
         &.noShow {
@@ -228,7 +228,7 @@ body {
             margin: 0;
         }
     }
-
+    
     .searchBar {
         position: relative;
 
@@ -242,6 +242,10 @@ body {
                 margin: 5px auto;
                 width: 20px;
                 -webkit-animation: spin 1.9s infinite linear;
+            }
+
+            .friend {
+                cursor: default;
             }
         }
 
