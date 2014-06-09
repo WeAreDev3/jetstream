@@ -92,7 +92,7 @@ gulp.task('hint', function () {
 
 // The Build Cleaner
 gulp.task('clean', function () {
-    return gulp.src(dirs.build).pipe(clean());
+    return gulp.src([dirs.build + '/js', dirs.build + '/css']).pipe(clean());
 });
 
 gulp.task('install', function () {
