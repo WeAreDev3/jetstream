@@ -35,7 +35,7 @@ function hasUsername (req, res, next) {
 module.exports = function(app, passport) {
     // The homepage
     app.route('/').get(ensureAuthenticated, hasUsername, function(req, res) {
-        res.render('app', {
+        res.render('index', {
             appName: config.appName,
             title: 'Home',
             user: req.user,
@@ -67,8 +67,8 @@ module.exports = function(app, passport) {
     // A catch-all (i.e. 404)
     app.route('*').all(function(req, res) {
         res.render('404', {
-            title: config.appName + ' - 404',
-            appName: config.appName
+            appName: config.appName,
+            title: '404'
         });
     });
 };
