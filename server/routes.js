@@ -25,7 +25,7 @@ function hasUsername (req, res, next) {
                 user: req.user,
                 assets: {
                     css: ['setUpUsername.css'],
-                    js: ['/socket.io/socket.io.js', 'setUpUsername.js']
+                    js: ['/socket.io/socket.io.js', 'validator-js/validator.min.js', 'setUpUsername.js']
                 }
             });
         }
@@ -34,18 +34,22 @@ function hasUsername (req, res, next) {
 
 module.exports = function(app, passport) {
     // The homepage
-    app.route('/').get(ensureAuthenticated, function(req, res) {
-        res.render('index', {
+    app.route('/').get(ensureAuthenticated, hasUsername, function(req, res) {
+        res.render('app', {
             appName: config.appName,
             title: 'Home',
-            user: req.user
+            user: req.user,
+            assets: {
+                css: ['http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800|Grand+Hotel', 'app.css', 'main.css'],
+                js: ['/socket.io/socket.io.js', 'main.js', 'app.js']
+            }
         });
     });
 
     // Google+ authentication
     app.route(config.auth.callback).get(passport.authenticate('google'), function(req, res) {
         req.session.googleCredentials = req.authInfo;
-        res.redirect('/app');
+        res.redirect('/');
     });
 
     app.route('/signin').get(function(req, res) {
@@ -56,18 +60,6 @@ module.exports = function(app, passport) {
             assets: {
                 css: ['http://fonts.googleapis.com/css?family=Open+Sans:400,300,700|Grand+Hotel', 'signin.css'],
                 js: ['signin.js']
-            }
-        });
-    });
-
-    app.route('/app').get(ensureAuthenticated, hasUsername, function(req, res) {
-        res.render('app', {
-            appName: config.appName,
-            title: config.appName,
-            user: req.user,
-            assets: {
-                css: ['http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800|Grand+Hotel', 'app.css', 'main.css'],
-                js: ['/socket.io/socket.io.js', 'main.js', 'app.js']
             }
         });
     });
