@@ -1,7 +1,7 @@
 var socket = io(),
     check = document.getElementById('usernameCheck'),
     usernameInput = document.getElementById('usernameInput'),
-    userRegEx = /^[a-zA-Z0-9]+$/;
+    userRegEx = /^[a-zA-Z0-9]{3,}$/;
 
 document.getElementById('usernameInput').onkeyup = function(event) {
     var username = event.target.value;

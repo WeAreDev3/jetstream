@@ -518,7 +518,7 @@ var def = {
         });
     },
     setUsernamefromId: function (uuid, newUsername, callback) {
-        if (val.isAlphanumeric(newUsername) && newUsername.length !== 0) {
+        if (val.isAlphanumeric(newUsername) && val.isLength(newUsername, 3)) {
             def.isUsernameSet(uuid, function (err, bool) {
                 if (err) {
                     callback(err);
