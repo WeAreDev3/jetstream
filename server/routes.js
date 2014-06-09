@@ -67,8 +67,8 @@ module.exports = function(app, passport) {
     // A catch-all (i.e. 404)
     app.route('*').all(function(req, res) {
         res.render('404', {
-            title: config.appName + ' - 404',
-            appName: config.appName
+            appName: config.appName,
+            title: '404'
         });
     });
 };
