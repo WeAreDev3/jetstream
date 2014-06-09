@@ -35,7 +35,7 @@ function hasUsername (req, res, next) {
 module.exports = function(app, passport) {
     // The homepage
     app.route('/').get(ensureAuthenticated, hasUsername, function(req, res) {
-        res.render('app', {
+        res.render('index', {
             appName: config.appName,
             title: 'Home',
             user: req.user,
