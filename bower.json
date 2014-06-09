@@ -1,0 +1,8 @@
+{
+  "name": "jetstream",
+  "description": "A chat server for nodejs using redis and rethinkdb",
+  "author": "Dev3",
+  "dependencies": {
+    "validator-js": "^3.14.1"
+  }
+}
