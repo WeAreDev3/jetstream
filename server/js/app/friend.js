@@ -17,6 +17,10 @@ var Friend = Friend || function(displayName, username, profileUrl, spin) {
         name = document.createElement('h3');
         uname = document.createElement('h4');
         profile = document.createElement('img');
+
+        container.onclick = function(event) {
+            console.log('Clicked!');
+        };
     }
 
     if (spin && !searchBar.classList.contains('spin')) {
