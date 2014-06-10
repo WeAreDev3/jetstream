@@ -395,7 +395,7 @@ var def = {
                 } else {
                     var found = false,
                         index = null;
-                    for (var request in res) {
+                    for (var request = 0; request <= res.length - 1; i++) {
                         if (res[request].from === fromId) {
                             found = true;
                             index = request;
