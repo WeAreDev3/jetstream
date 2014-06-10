@@ -39,10 +39,10 @@ window.addEventListener('mousedown', function(e) {
 });
 
 window.addEventListener('mouseup', function(e) {
-    var selectableMessages = document.querySelectorAll('.message-text');
+    var selectable = document.getElementsByClassName('message-text');
 
-    for (var i = selectableMessages.length - 1; i >= 0; i--) {
-        selectableMessages[i].classList.add('selectable');
+    for (var i = selectable.length - 1; i >= 0; i--) {
+        selectable[i].classList.add('selectable');
     }
 
     if (window.currentWin !== undefined) {
