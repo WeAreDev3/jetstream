@@ -365,7 +365,7 @@ var def = {
                             if (err) {
                                 callback(err);
                             } else {
-                                callback(null, res);
+                                callback(null, bool, res);
                             }
                         });
                     });
@@ -377,7 +377,7 @@ var def = {
                             if (err) {
                                 callback(err);
                             } else {
-                                callback(null, res);
+                                callback(null, bool, res);
                             }
                         });
                     });
