@@ -371,9 +371,9 @@ var def = {
                     });
                 } else {
                     def.rql(function (conn) {
-                        r.table('users').get(toId)('requests').append(rData)
-                        .run(conn, function (err, res) {
-                            conn.close();
+                        r.table('users').get(toId).update({
+                            requests: r.table('users').get(toId)('requests').append(rData)
+                        }, {nonAtomic: true}).run(conn, function (err, res) {
                             if (err) {
                                 callback(err);
                             } else {
