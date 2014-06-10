@@ -5,13 +5,12 @@ window.addEventListener('mousedown', function(e) {
         win = el,
         i;
 
-    // Defining the chat box, if one was clicked
-    while (!win.classList.contains('chat')) {
+    // Defining the window, if one was clicked
+    while (!win.classList.contains('chat') && win !== null) {
         win = win.parentElement;
-        if (win === null) break;
     }
 
-    // Handling chat box stuffs
+    // Handling window stuffs
     if (win !== null) {
         window.currentWin = win.window;
 
