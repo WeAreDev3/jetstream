@@ -373,7 +373,7 @@ var def = {
                     def.rql(function (conn) {
                         r.table('users').get(toId).update({
                             requests: r.table('users').get(toId)('requests').append(rData)
-                        }).run(conn, function (err, res) {
+                        }, {nonAtomic: false}).run(conn, function (err, res) {
                             if (err) {
                                 callback(err);
                             } else {
