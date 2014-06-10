@@ -40,7 +40,7 @@ FriendList.prototype.initElement = function(parent) {
 FriendList.prototype.checkInput = function(e) {
     var input = this.el.getElementsByTagName('input')[0];
 
-    new Friend('', '', '', true);
+    new Friend('', '', '', '', true);
 
     if (input.value.trim() !== '') {
         this.el.getElementsByClassName('searchBar')[0].getElementsByClassName('friend')[0].classList.remove('noShow');
