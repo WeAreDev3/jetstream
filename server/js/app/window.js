@@ -9,10 +9,10 @@ Win.prototype.handleDrag = function(e) {
     var rect = this.el.getBoundingClientRect(),
         top = rect.top + e.clientY - this.mouseY,
         left = rect.left + e.clientX - this.mouseX,
-        selectableMessages = document.querySelectorAll('.selectable');
+        selectable = document.getElementsByClassName('selectable');
 
-    for (var i = selectableMessages.length - 1; i >= 0; i--) {
-        selectableMessages[i].classList.remove('selectable');
+    for (var i = selectable.length - 1; i >= 0; i--) {
+        selectable[i].classList.remove('selectable');
     }
 
     if (top >= 0) {

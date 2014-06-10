@@ -2,18 +2,18 @@ var inApp = true;
 
 window.addEventListener('mousedown', function(e) {
     var el = e.target,
-        chat = el,
+        win = el,
         i;
 
     // Defining the chat box, if one was clicked
-    while (!chat.classList.contains('chat')) {
-        chat = chat.parentElement;
-        if (chat === null) break;
+    while (!win.classList.contains('chat')) {
+        win = win.parentElement;
+        if (win === null) break;
     }
 
     // Handling chat box stuffs
-    if (chat !== null) {
-        window.currentWin = chat.window;
+    if (win !== null) {
+        window.currentWin = win.window;
 
         // Handling the window dragging (from the header)
         if (el.tagName === 'HEADER') {
@@ -23,13 +23,13 @@ window.addEventListener('mousedown', function(e) {
             window.addEventListener('mousemove', currentWin.drag);
         }
 
-        chat.style.zIndex = app.chats.length + 1;
-        chat.style.position = 'fixed';
+        win.style.zIndex = app.chats.length + 1;
+        win.style.position = 'fixed';
         for (i = app.chats.length - 1; i >= 0; i--) {
             app.chats[i].el.style.zIndex = Math.max(app.chats[i].el.style.zIndex - 1, 1);
             app.chats[i].el.classList.remove('active');
         }
-        chat.classList.add('active');
+        win.classList.add('active');
 
     } else {
         for (i = app.chats.length - 1; i >= 0; i--) {
@@ -39,10 +39,10 @@ window.addEventListener('mousedown', function(e) {
 });
 
 window.addEventListener('mouseup', function(e) {
-    var selectableMessages = document.querySelectorAll('.message-text');
+    var selectable = document.getElementsByClassName('message-text');
 
-    for (var i = selectableMessages.length - 1; i >= 0; i--) {
-        selectableMessages[i].classList.add('selectable');
+    for (var i = selectable.length - 1; i >= 0; i--) {
+        selectable[i].classList.add('selectable');
     }
 
     if (window.currentWin !== undefined) {
