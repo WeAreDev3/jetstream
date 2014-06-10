@@ -25,7 +25,7 @@ window.addEventListener('DOMContentLoaded', function() {
             searchBar.classList.remove('spin');
             searchBar.getElementsByTagName('h3')[0].classList.remove('icon-cog');
             
-            new Friend(data.googName, data.username, data.googImgUrl);
+            new Friend(data.googName, data.username, data.googImgUrl, data.id);
         });
     }
 

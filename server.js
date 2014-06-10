@@ -98,7 +98,7 @@ io.use(passportSocketIo.authorize({
 
 // socket.io
 io.on('connection', function(socket) {
-    l(socket.user.displayName, 'connected to Socket.IO:');
+    l(socket.user.displayName, 'connected to Socket.IO');
     socket.on('disconnect', function() {
         l('User disconnected:', socket.user.displayName);
     });

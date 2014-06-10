@@ -1,4 +1,4 @@
-var Friend = Friend || function(displayName, username, profileUrl, spin) {
+var Friend = Friend || function(displayName, username, profileUrl, id, spin) {
     var searchBar = document.getElementById('friendList').getElementsByClassName('searchBar')[0],
         friend = searchBar.getElementsByClassName('friend'),
         container,
@@ -32,6 +32,7 @@ var Friend = Friend || function(displayName, username, profileUrl, spin) {
         searchBar.classList.add('spin');
         name.classList.add('icon-cog');
     } else {
+        container.dataset.id = id;
         name.textContent = displayName;
         uname.textContent = username;
         profile.src = profileUrl;
