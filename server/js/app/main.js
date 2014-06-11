@@ -1,5 +1,3 @@
-var inApp = true;
-
 window.addEventListener('mousedown', function(e) {
     var el = e.target,
         win = el,
@@ -54,4 +52,34 @@ window.addEventListener('mouseup', function(e) {
             }, 0);
         }
     }
+});
+
+
+window.socket = io();
+socket.emit('ready');
+socket.emit('getUsersFriends');
+socket.emit('getUsersFriendRequests');
+socket.on('getUsersFriends', function(friends) {
+    console.log(friends);
+    new FriendList(friends);
+});
+socket.on('getUsersFriendRequests', function(requests) {
+    console.log(requests);
+    new FriendList(friends);
+});
+socket.on('getIdFromUsername', function(data) {
+    if (data.id) {
+        socket.emit('getOtherUserInfo', data.id);
+    }
+});
+socket.on('getOtherUserInfo', function(data) {
+    console.log(data);
+    var searchBar = document.getElementById('friendList').getElementsByClassName('searchBar')[0];
+    searchBar.classList.remove('spin');
+    searchBar.getElementsByTagName('h3')[0].classList.remove('icon-cog');
+    
+    new Friend(data.googName, data.username, data.googImgUrl, data.id);
+});
+socket.on('sendFriendRequest', function(err, response, updated) {
+    console.log(err, response, updated);
 });
