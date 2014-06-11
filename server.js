@@ -99,18 +99,15 @@ io.use(passportSocketIo.authorize({
 // socket.io
 io.on('connection', function(socket) {
     l(socket.user.displayName, 'connected to Socket.IO');
-    socket.on('disconnect', function() {
-        l('User disconnected:', socket.user.displayName);
-    });
     socket.once('ready', function() {
-        l(socket.user.displayName, 'is ready');
         dbMessage.on('message', function(data) {
+            l('listener created?');
             db.userInChat(socket.user.uuid, data.chatId, function(err, bool) {
                 if (err) {
-                    //
+                    socket.emit('message', data.chatId, err, data);
                 } else {
                     if (bool) {    
-                        socket.emit('message', data);
+                        socket.emit('message', data.chatId, null, data);
                     }
                 }
             });
@@ -120,84 +117,59 @@ io.on('connection', function(socket) {
         db.isBlacklisted(socket.user.uuid,
             uuid, function(err, bool) {
                 if (err) {
-                    socket.emit('getOtherUserInfo', {
-                        uuid: data.tempId,
-                        error: 'Chat did not exist'
-                    });
+                    socket.emit('getOtherUserInfo', uuid, err);
                 } else {
                     if (bool) {
-                        var giveToClient = {
-                            id: uuid,
-                            found: false
-                        };
-                        socket.emit('getOtherUserInfo', giveToClient);
+                        socket.emit('getOtherUserInfo', uuid, null, null);
                     } else {
                         db.getOtherUserInfo(uuid, function(err, res) {
                             if (err) {
-                                //
+                                socket.emit('getOtherUserInfo', uuid, err);
                             } else {
-                                var giveToClient = {
-                                    id: res.id,
-                                    username: res.username,
-                                    googName: res.googName,
-                                    googImgUrl: res.googImgUrl,
-                                    found: true
-                                };
-                                socket.emit('getOtherUserInfo', giveToClient);
+                                socket.emit('getOtherUserInfo', uuid, null,
+                                    res);
                             }
                         });
                     }
                 }
             });
     });
-    socket.on('message', function(data) {
-        l(socket.user.displayName, 'sent a message:', data);
+    socket.on('message', function(tempId, data) {
         db.userInChat(socket.user.uuid, data.chatId, function(err, bool) {
             if (err) {
                 if (err.message === 'Cannot perform get_field on a non-object non-sequence `null`.') {
-                    socket.emit('message', {
-                        tempId: data.tempId,
-                        error: 'Chat did not exist'
-                    });
+                    socket.emit('message', tempId, err, 'Chat does not exist');
                 } else { // catch all
-                    socket.emit('message', {
-                        tempId: data.tempId,
-                        error: err
-                    });
+                    socket.emit('message', tempId, err);
                 }
             } else {
                 if (bool) {
                     var newMessage = new db.Message(socket.user.uuid,
-                        data.chatId, data.message, data.tempId);
+                        data.chatId, data.message, tempId);
                     db.createMessage(newMessage, function(err, res) {
                         if (err) {
-                            if (false) {
-                                //
-                            } else { // catch all
-                                socket.emit('message', {
-                                    tempId: data.tempId,
-                                    error: err
-                                });
-                            }
+                            socket.emit('message', tempId, err);
+                        } else {
+                            socket.emit('message', tempId, null, res);
                         }
                     });
                 }
             }
         });
     });
-    socket.on('createChat', function(data) {
+    socket.on('createChat', function(tempId, data) {
         db.areFriends(data.users, function(err, ob) {
             var sendFriendRequests = function(person, nonfriend) {
                 db.sendFriendRequest(person,
                     nonfriend,
                     function(err, res) {
                         if (err) {
-                            // handle
+                            socket.emit('createChat', tempId, err);
                         } else {
-                            socket.emit('createChat', {
-                                tempId: data.tempId,
-                                mustFriend: [person, nonfriend]
-                            });
+                            socket.emit('createChat', tempId, null,
+                                null, // no chat created
+                                [person, nonfriend] // friend conflict
+                            );
                         }
                     }
                 );
@@ -206,19 +178,13 @@ io.on('connection', function(socket) {
                     db.isBlacklisted(person, nonfriend,
                         function(err, bool) {
                             if (err) {
-                                socket.emit('createChat', {
-                                    tempId: data.tempId,
-                                    dbError: err
-                                });
+                                socket.emit('createChat', tempId, err);
                             } else {
                                 if (bool) {
-                                    socket.emit('createChat', {
-                                        tempId: data.tempId,
-                                        blocked: {
-                                            blocker: person,
-                                            blockee: nonfriend
-                                        }
-                                    });
+                                    socket.emit('createChat', tempId,
+                                        null, // no error
+                                        null, // the chat was not created, so no id
+                                        [person, nonfriend]);// the blacklist conflict
                                 } else {
                                     sendFriendRequests(person, nonfriend);
                                 }
@@ -229,14 +195,9 @@ io.on('connection', function(socket) {
             if (Object.keys(ob).length === 0) {
                 db.createChat(data.name, data.users, function(err, chatId) {
                     if (err) {
-                        //
+                        socket.emit('createChat', tempId, err);
                     } else {
-                        var chatConfirm = {
-                            name: data.name,
-                            id: chatId,
-                            tempId: tempId
-                        };
-                        socket.emit('createChat', chatConfirm);
+                        socket.emit('createChat', tempId, null, chatId);
                     }
                 });
             } else { // not all participants are friends
@@ -251,24 +212,21 @@ io.on('connection', function(socket) {
     socket.on('getIdFromUsername', function(username) {
         db.getIdFromUsername(username, function(err, uuid) {
             if (err) {
-                // handle it
+                socket.emit('getIdFromUsername', username, err, null, null);
             } else {
                 db.isBlacklisted(socket.user.uuid, uuid, function(err, bool) {
                     if (err) {
-                        //handle it
+                        socket.emit('getIdFromUsername', username, err,
+                            null, null);
                     } else {
                         if (bool) {
-                            socket.emit('getIdFromUsername', {
-                                username: username,
-                                found: false,
-                                id: null
-                            });
+                            socket.emit('getIdFromUsername', username,
+                                true, // if you've been blacklisted
+                                null // the uuid
+                                );
                         } else {
-                            socket.emit('getIdFromUsername', {
-                                username: username,
-                                found: true,
-                                id: uuid
-                            });
+                            socket.emit('getIdFromUsername', username, false,
+                                uuid);
                         }
                     }
                 });
@@ -280,25 +238,17 @@ io.on('connection', function(socket) {
             db.getUserSettings(socket.user.uuid,
                 specific, function(err, result) {
                     if (err) {
-                        // handle it
+                        socket.emit('userSettings', specific, err, null);
                     } else {
-                        var giveSettings = {
-                            specific: specific,
-                            settings: result
-                        };
-                        socket.emit('userSettings', giveSettings);
+                        socket.emit('userSettings', specific, null, res);
                     }
                 });
         } else {
             db.getUserSettings(socket.user.uuid, function(err, res) {
                 if (err) {
-                    // handle it
+                    socket.emit('userSettings', null, err, null);
                 } else {
-                    var giveSettings = {
-                        specific: null,
-                        settings: res
-                    };
-                    socket.emit('userSettings', giveSettings);
+                    socket.emit('userSettings', null, null, res);
                 }
             });
         }
@@ -306,43 +256,43 @@ io.on('connection', function(socket) {
     socket.on('getUsersFriends', function() {
         db.getUsersFriends(socket.user.uuid, function(err, resList) {
             if (err) {
-                // handle it
+                socket.emit('getUsersFriends', null, err, null);
             } else {
-                socket.emit('getUsersFriends', resList);
+                socket.emit('getUsersFriends', null, null, resList);
             }
         });
     });
     socket.on('getUsersChats', function() {
         db.getUsersChats(socket.user.uuid, function(err, resList) {
             if (err) {
-                // handle it
+                socket.emit('getUsersChats', null, err, null);
             } else {
-                socket.emit('getUsersChats', resList);
+                socket.emit('getUsersChats', null, null, resList);
             }
         });
     });
     socket.on('getChatInfo', function(chatId) {
         db.getChatInfo(chatId, function(err, info) {
             if (err) {
-                // handle it
+                socket.emit('getChatInfo', chatId, err, null);
             } else {
-                socket.emit('getChatInfo', info);
+                socket.emit('getChatInfo', chatId, null, info);
             }
         });
     });
     socket.on('setUsernamefromId', function(username) {
         db.isUsernameTaken(username, function(err, bool) {
             if (err) {
-                //handle
+                socket.emit('setUsernamefromId', username, err, null);
             } else {
                 if (bool) {
-                    socket.emit('setUsernamefromId', false);
+                    socket.emit('setUsernamefromId', username, null, false);
                 } else {
                     db.setUsernamefromId(socket.user.uuid, username, function(err, bool) {
                         if (err) {
-                            // handle
+                            socket.emit('setUsernamefromId', username, err, null);
                         } else {
-                            socket.emit('setUsernamefromId', bool);
+                            socket.emit('setUsernamefromId', username, null, bool);
                         }
                     });
                 }
@@ -352,15 +302,19 @@ io.on('connection', function(socket) {
     socket.on('isUsernameTaken', function(username) {
         db.isUsernameTaken(username, function(err, bool) {
             if (err) {
-                // handle
+                socket.emit('isUsernameTaken', username, err, null);
             } else {
-                socket.emit('isUsernameTaken', username, bool);
+                socket.emit('isUsernameTaken', username, null, bool);
             }
         });
     });
     socket.on('sendFriendRequest', function(toId) {
         db.sendFriendRequest(socket.user.uuid, toId, function(err, updated, response) {
-            socket.emit('sendFriendRequest', err, updated, response);
+            if (err) {
+                socket.emit('sendFriendRequest', toId, err, null);
+            } else {
+                socket.emit('sendFriendRequest', toId, updated, response);
+            }
         });
     });
 });

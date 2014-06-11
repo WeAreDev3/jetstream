@@ -34,7 +34,8 @@ var def = {
     },
     getOtherUserInfo: function(userid, callback) {
         def.rql(function(conn) {
-            r.table('users').get(userid)
+            r.table('users').get(userid).pluck('username', 'googName',
+                'googImgUrl', 'timezone', 'timestamp')
             .run(conn, function(err, results) {
                 conn.close();
                 if (err) {
