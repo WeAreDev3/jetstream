@@ -57,15 +57,44 @@ window.addEventListener('mouseup', function(e) {
 
 window.socket = io();
 socket.emit('ready');
-socket.emit('getUsersFriends');
+// socket.emit('getUsersFriends');
 socket.emit('getUsersFriendRequests');
+
 socket.on('getUsersFriends', function(friends) {
     console.log(friends);
     new FriendList(friends);
 });
-socket.on('getUsersFriendRequests', function(requests) {
-    console.log(requests);
-    new FriendList(friends);
+socket.on('getUsersFriendRequests', function(scope, err, requests) {
+    var numRequests = requests.length,
+        chatInfo,
+        friendsList,
+        notification,
+        icon,
+        number,
+        text1,
+        text2;
+
+    if (numRequests) {
+        chatInfo = document.getElementsByClassName('sidebar')[0].getElementsByClassName('chatInfo')[0];
+        friendsList = document.getElementsByClassName('sidebar')[0].getElementsByClassName('friendsList')[0];
+
+        notification = document.createElement('div');
+        icon = document.createElement('span');
+        number = document.createElement('b');
+        text1 = document.createTextNode('You have ');
+        text2 = document.createTextNode(' friend request' + (numRequests !== 1 ? 's' : ''));
+
+        notification.classList.add('friendRequests');
+        icon.classList.add('icon-users');
+        number.textContent = numRequests;
+
+        notification.appendChild(icon);
+        notification.appendChild(text1);
+        notification.appendChild(number);
+        notification.appendChild(text2);
+
+        chatInfo.insertBefore(notification, friendsList);
+    }
 });
 socket.on('getIdFromUsername', function(data) {
     if (data.id) {

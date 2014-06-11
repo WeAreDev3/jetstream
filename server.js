@@ -314,6 +314,12 @@ io.on('connection', function(socket) {
                 socket.emit('sendFriendRequest', toId, err, null);
             } else {
                 socket.emit('sendFriendRequest', toId, updated, response);
+    socket.on('getUsersFriendRequests', function() {
+        db.getUsersFriendRequests(socket.user.uuid, function(err, friendRequests) {
+            if (err) {
+                socket.emit('getUsersFriendRequests', null, err);
+            } else {
+                socket.emit('getUsersFriendRequests', null, null, friendRequests);
             }
         });
     });

@@ -412,6 +412,19 @@ var def = {
             });
         });
     },
+    getUsersFriendRequests: function (userId, callback) {
+        def.rql(function (conn) {
+            r.table('users').get(userId)('requests')
+            .run(conn, function (err, friendRequests) {
+                conn.close();
+                if (err) {
+                    callback(err);
+                } else {
+                    callback(null, friendRequests);
+                }
+            });
+        });
+    },
     isBlacklisted: function (potentialBlacklistee, normalGuy, callback) {
         def.rql(function (conn) {
             r.table('users').get(normalGuy)('blackList')
