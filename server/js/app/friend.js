@@ -19,7 +19,7 @@ var Friend = Friend || function(displayName, username, profileUrl, id, spin) {
         profile = document.createElement('img');
 
         container.onclick = function(event) {
-            console.log('Clicked!');
+            socket.emit('sendFriendRequest', container.dataset.id);
         };
     }
 

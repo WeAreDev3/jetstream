@@ -356,6 +356,12 @@ io.on('connection', function(socket) {
             }
         });
     });
+
+    socket.on('sendFriendRequest', function(toId) {
+        db.sendFriendRequest(socket.user.uuid, toId, function(err, updated, response) {
+            socket.emit('sendFriendRequest', err, updated, response);
+        });
+    });
 });
 
 // Open the ports for business

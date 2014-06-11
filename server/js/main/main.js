@@ -27,6 +27,10 @@ window.addEventListener('DOMContentLoaded', function() {
             
             new Friend(data.googName, data.username, data.googImgUrl, data.id);
         });
+
+        socket.on('sendFriendRequest', function(err, response, updated) {
+            console.log(err, response, updated);
+        });
     }
 
 });
