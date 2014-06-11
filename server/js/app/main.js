@@ -122,6 +122,8 @@ socket.on('getOtherUserInfo', function(userId, err, user) {
             searchContent.removeChild(searchContent.firstChild);
         }
 
+        searchContent.removeAttribute('hidden');
+
         searchContent.appendChild(new SidebarItem(userId, user.googImgUrl, user.googName, user.username, function(event) {
             var element = event.target;
 

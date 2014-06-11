@@ -36,6 +36,8 @@ function initSearch(argument) {
             if (input !== '') {
                 socket.emit('getIdFromUsername', input);
             } else {
+                searchContect.setAttribute('hidden', '');
+
                 while (searchContect.firstChild) {
                     searchContect.removeChild(searchContect.firstChild);
                 }
