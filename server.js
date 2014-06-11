@@ -114,8 +114,7 @@ io.on('connection', function(socket) {
         });
     });
     socket.on('getOtherUserInfo', function(uuid) {
-        db.isBlacklisted(socket.user.uuid,
-            uuid, function(err, bool) {
+        db.isBlacklisted(socket.user.uuid, uuid, function(err, bool) {
                 if (err) {
                     socket.emit('getOtherUserInfo', uuid, err);
                 } else {
@@ -212,21 +211,17 @@ io.on('connection', function(socket) {
     socket.on('getIdFromUsername', function(username) {
         db.getIdFromUsername(username, function(err, uuid) {
             if (err) {
-                socket.emit('getIdFromUsername', username, err, null, null);
+                socket.emit('getIdFromUsername', username, err, null);
             } else {
                 db.isBlacklisted(socket.user.uuid, uuid, function(err, bool) {
                     if (err) {
-                        socket.emit('getIdFromUsername', username, err,
-                            null, null);
+                        socket.emit('getIdFromUsername', username, err, null);
                     } else {
                         if (bool) {
-                            socket.emit('getIdFromUsername', username,
-                                true, // if you've been blacklisted
-                                null // the uuid
-                                );
+                            socket.emit('getIdFromUsername', username, null,
+                                        null);
                         } else {
-                            socket.emit('getIdFromUsername', username, false,
-                                uuid);
+                            socket.emit('getIdFromUsername', username, null, uuid);
                         }
                     }
                 });
@@ -311,9 +306,12 @@ io.on('connection', function(socket) {
     socket.on('sendFriendRequest', function(toId) {
         db.sendFriendRequest(socket.user.uuid, toId, function(err, updated, response) {
             if (err) {
-                socket.emit('sendFriendRequest', toId, err, null);
+                socket.emit('sendFriendRequest', toId, err, null, null);
             } else {
-                socket.emit('sendFriendRequest', toId, updated, response);
+                socket.emit('sendFriendRequest', toId, null, updated, response);
+            }
+        });
+    });
     socket.on('getUsersFriendRequests', function() {
         db.getUsersFriendRequests(socket.user.uuid, function(err, friendRequests) {
             if (err) {
