@@ -1,6 +1,7 @@
 var domFunctions = domFunctions || [];
-domFunctions.push(initChats);
-domFunctions.push(initMessages);
+domFunctions.push(initSearch);
+// domFunctions.push(initChats);
+// domFunctions.push(initMessages);
 
 var app = {
     chats: [],
@@ -21,4 +22,25 @@ function initMessages () {
     for (var i = 0; i < messages.length; i++) {
         new Message(messages[i]);
     }
+}
+
+function initSearch(argument) {
+    var searchContect = document.getElementsByClassName('sidebar')[0].getElementsByClassName('searchContent')[0].getElementsByTagName('ul')[0],
+        searchInput = document.getElementById('search');
+
+    searchInput.onkeyup = function(event) {
+        var element = event.target,
+            input = element.value.trim();
+
+        if (element.dataset.prevValue !== input || event.keyCode === 13) {
+            if (input !== '') {
+                socket.emit('getIdFromUsername', input);
+            } else {
+                while (searchContect.firstChild) {
+                    searchContect.removeChild(searchContect.firstChild);
+                }
+            }
+        }
+        element.dataset.prevValue = input;
+    };
 }
