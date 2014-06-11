@@ -10,6 +10,7 @@ var Chat = Chat || function(data, parent) {
     this.initElement(parent);
     this.window = new Win(this.el);
     app.chats.push(this);
+    app.windows.push(this);
 };
 
 Chat.prototype.initElement = function(parent) {
@@ -23,6 +24,7 @@ Chat.prototype.initElement = function(parent) {
 
     container.id = this.id;
     container.classList.add('chat');
+    container.classList.add('window');
     header.textContent = this.name;
     input.onkeypress = this.checkInput.bind(this);
 

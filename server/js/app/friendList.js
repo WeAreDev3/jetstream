@@ -5,7 +5,9 @@ var FriendList = FriendList || function(friends, parent) {
 
     this.initElement(parent);
     this.window = new Win(this.el);
+    app.windows.push(this);
 };
+
 
 FriendList.prototype.initElement = function(parent) {
     parent = parent || document.body;
@@ -30,7 +32,7 @@ FriendList.prototype.initElement = function(parent) {
 
     searchBar.appendChild(searchIcon);
     searchBar.appendChild(input);
-    container.classList.add('chat');
+    container.classList.add('window');
     container.appendChild(header);
     container.appendChild(searchBar);
     container.appendChild(content);

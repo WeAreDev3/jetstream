@@ -16,7 +16,7 @@ body {
     background-color: #DDDDDD;
 }
 
-.chat {
+.window {
     width: 300px;
     background-color: #F9F9F9;
     border: 1px solid #999999;
@@ -28,7 +28,6 @@ body {
     &.active {
         box-shadow: 0 20px 100px -10px black;
         border: 1px solid #606060;
-        padding-bottom: 40px;
 
         footer {
             opacity: 1;
@@ -165,6 +164,12 @@ body {
             cursor: default;
             outline: none;
         }
+    }
+}
+
+.chat {
+    &.active {
+        padding-bottom: 40px;
     }
 }
 

@@ -6,8 +6,9 @@ window.addEventListener('mousedown', function(e) {
         i;
 
     // Defining the window, if one was clicked
-    while (!win.classList.contains('chat') && win !== null) {
+    while (!win.classList.contains('window')) {
         win = win.parentElement;
+        if (win === null) break;
     }
 
     // Handling window stuffs
@@ -22,17 +23,17 @@ window.addEventListener('mousedown', function(e) {
             window.addEventListener('mousemove', currentWin.drag);
         }
 
-        win.style.zIndex = app.chats.length + 1;
+        win.style.zIndex = app.windows.length + 1;
         win.style.position = 'fixed';
-        for (i = app.chats.length - 1; i >= 0; i--) {
-            app.chats[i].el.style.zIndex = Math.max(app.chats[i].el.style.zIndex - 1, 1);
-            app.chats[i].el.classList.remove('active');
+        for (i = app.windows.length - 1; i >= 0; i--) {
+            app.windows[i].el.style.zIndex = Math.max(app.windows[i].el.style.zIndex - 1, 1);
+            app.windows[i].el.classList.remove('active');
         }
         win.classList.add('active');
 
     } else {
-        for (i = app.chats.length - 1; i >= 0; i--) {
-            app.chats[i].el.classList.remove('active');
+        for (i = app.windows.length - 1; i >= 0; i--) {
+            app.windows[i].el.classList.remove('active');
         }
     }
 });

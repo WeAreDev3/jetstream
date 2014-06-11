@@ -4,7 +4,8 @@ domFunctions.push(initMessages);
 
 var app = {
     chats: [],
-    messages: []
+    messages: [],
+    windows: []
 };
 
 function initChats () {
