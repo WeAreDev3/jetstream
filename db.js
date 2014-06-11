@@ -186,7 +186,7 @@ var def = {
                     } else {
                         message.timestamp = r.now();
                         delete message.tempId;
-                        def.rql(function (err, conn) {
+                        def.rql(function (conn) {
                             r.table('messages').insert(message)
                             .run(conn, function (err, result) {
                                 conn.close();
