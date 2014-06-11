@@ -2,6 +2,7 @@
 
 $radius: 3px;
 $transition: .25s;
+$sidebarWidth: 250px;
 
 *, *:before, *:after {
     box-sizing: border-box;
@@ -23,11 +24,26 @@ body {
 }
 
 .sidebar {
+    position: relative;
     height: 100%;
-    width: 250px;
+    width: $sidebarWidth;
     background-color: #BBB;
 
+    &.showRequests {
+        h1 {
+            width: $sidebarWidth * 2;
+        }
+
+        .listRequests {
+            left: $sidebarWidth;
+            right: -$sidebarWidth;
+        }
+    }
+
     h1 {
+        z-index: 2;
+        position: absolute;
+        width: $sidebarWidth;
         margin: 0;
         padding: 5px;
         text-align: center;
@@ -35,6 +51,7 @@ body {
         font: 30px 'Grand Hotel';
         background-color: #AAA;
         border-bottom: 2px solid #808080;
+        transition: width $transition;
     }
 
     h2 {
@@ -63,6 +80,17 @@ body {
         }
     }
 
+    .listRequests {
+        position: absolute;
+        background-color: #87CEEB;
+        padding-top: 52px;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        transition: left .25s, right .25s;
+    }
+
     .friendRequests {
         background-color: #87CEEB;
         padding: 5px 10px;
@@ -75,6 +103,15 @@ body {
             margin-right: 10px;
             vertical-align: middle;
         }
+    }
+
+    .content {
+        z-index: 1;
+        position: absolute;
+        background-color: #BBB;
+        height: calc(100% - 52px);
+        top: 52px;
+        width: 100%;
     }
 
     ul {

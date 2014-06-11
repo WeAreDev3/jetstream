@@ -113,20 +113,20 @@ io.on('connection', function(socket) {
             });
         });
     });
-    socket.on('getOtherUserInfo', function(uuid) {
+    socket.on('getOtherUserInfo', function(uuid, scope) {
         db.isBlacklisted(socket.user.uuid, uuid, function(err, bool) {
                 if (err) {
-                    socket.emit('getOtherUserInfo', uuid, err);
+                    socket.emit('getOtherUserInfo', uuid, err, scope);
                 } else {
                     if (bool) {
-                        socket.emit('getOtherUserInfo', uuid, null, null);
+                        socket.emit('getOtherUserInfo', uuid, scope);
                     } else {
                         db.getOtherUserInfo(uuid, function(err, res) {
                             if (err) {
-                                socket.emit('getOtherUserInfo', uuid, err);
+                                socket.emit('getOtherUserInfo', uuid, err, scope);
                             } else {
                                 socket.emit('getOtherUserInfo', uuid, null,
-                                    res);
+                                    scope, res);
                             }
                         });
                     }
@@ -311,6 +311,9 @@ io.on('connection', function(socket) {
                 socket.emit('sendFriendRequest', toId, null, updated, response);
             }
         });
+    });
+    socket.on('acceptFriendRequest', function(toId) {
+        // need to get db function
     });
     socket.on('getUsersFriendRequests', function() {
         db.getUsersFriendRequests(socket.user.uuid, function(err, friendRequests) {

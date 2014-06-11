@@ -65,7 +65,9 @@ socket.on('getUsersFriends', function(friends) {
     new FriendList(friends);
 });
 socket.on('getUsersFriendRequests', function(scope, err, requests) {
-    var numRequests = requests.length,
+    var sidebar = document.getElementsByClassName('sidebar')[0],
+        listRequests,
+        numRequests = requests.length,
         chatInfo,
         friendsList,
         notification,
@@ -75,8 +77,13 @@ socket.on('getUsersFriendRequests', function(scope, err, requests) {
         text2;
 
     if (numRequests) {
-        chatInfo = document.getElementsByClassName('sidebar')[0].getElementsByClassName('chatInfo')[0];
-        friendsList = document.getElementsByClassName('sidebar')[0].getElementsByClassName('friendsList')[0];
+        chatInfo = sidebar.getElementsByClassName('chatInfo')[0];
+        friendsList = sidebar.getElementsByClassName('friendsList')[0];
+        listRequests = sidebar.getElementsByClassName('listRequests')[0];
+
+        for (var i = numRequests - 1; i >= 0; i--) {
+            socket.emit('getOtherUserInfo', requests[i].from, 'requests');
+        }
 
         notification = document.createElement('div');
         icon = document.createElement('span');
@@ -87,6 +94,10 @@ socket.on('getUsersFriendRequests', function(scope, err, requests) {
         notification.classList.add('friendRequests');
         icon.classList.add('icon-users');
         number.textContent = numRequests;
+
+        notification.onclick = function(event) {
+            sidebar.classList.toggle('showRequests');
+        };
 
         notification.appendChild(icon);
         notification.appendChild(text1);
@@ -102,7 +113,7 @@ socket.on('getIdFromUsername', function(username, err, userId) {
 
     if (userId) {
         searchContent.removeAttribute('hidden');
-        socket.emit('getOtherUserInfo', userId);
+        socket.emit('getOtherUserInfo', userId, 'searchUsers');
     } else {
         ul = searchContent.getElementsByTagName('ul')[0];
 
@@ -113,26 +124,42 @@ socket.on('getIdFromUsername', function(username, err, userId) {
         }
     }
 });
-socket.on('getOtherUserInfo', function(userId, err, user) {
+socket.on('getOtherUserInfo', function(userId, err, scope, user) {
+    var sidebar;
+
     if (user) {
-        console.log(user);
-        var searchContent = document.getElementsByClassName('sidebar')[0].getElementsByClassName('searchContent')[0].getElementsByTagName('ul')[0];
+        sidebar = document.getElementsByClassName('sidebar')[0];
+        if (scope === 'searchUsers') {
+            console.log(user);
+            var searchContent = sidebar.getElementsByClassName('searchContent')[0].getElementsByTagName('ul')[0];
 
-        while (searchContent.firstChild) {
-            searchContent.removeChild(searchContent.firstChild);
-        }
-
-        searchContent.removeAttribute('hidden');
-
-        searchContent.appendChild(new SidebarItem(userId, user.googImgUrl, user.googName, user.username, function(event) {
-            var element = event.target;
-
-            if (element.tagName !== 'LI') {
-                element = element.parentElement;
+            while (searchContent.firstChild) {
+                searchContent.removeChild(searchContent.firstChild);
             }
 
-            socket.emit('sendFriendRequest', element.dataset.id);
-        }));
+            searchContent.removeAttribute('hidden');
+
+            searchContent.appendChild(new SidebarItem(userId, user.googImgUrl, user.googName, user.username, function(event) {
+                var element = event.target;
+
+                if (element.tagName !== 'LI') {
+                    element = element.parentElement;
+                }
+
+                socket.emit('sendFriendRequest', element.dataset.id);
+            }));
+        } else if (scope === 'requests') {
+            var request = new SidebarItem(userId, user.googImgUrl, user.googName, user.username, function(event) {
+                var element = event.target;
+
+                if (element.tagName !== 'LI') {
+                    element = element.parentElement;
+                }
+
+                socket.emit('acceptFriendRequest', element.dataset.id);
+            });
+            sidebar.getElementsByClassName('listRequests')[0].getElementsByTagName('ul')[0].appendChild(request);
+        }
     }
 });
 socket.on('sendFriendRequest', function(toId, err, updated, response) {
