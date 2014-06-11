@@ -96,19 +96,43 @@ socket.on('getUsersFriendRequests', function(scope, err, requests) {
         chatInfo.insertBefore(notification, friendsList);
     }
 });
-socket.on('getIdFromUsername', function(data) {
-    if (data.id) {
-        socket.emit('getOtherUserInfo', data.id);
+socket.on('getIdFromUsername', function(username, err, userId) {
+    var searchContent = document.getElementsByClassName('sidebar')[0].getElementsByClassName('searchContent')[0],
+        ul;
+
+    if (userId) {
+        searchContent.removeAttribute('hidden');
+        socket.emit('getOtherUserInfo', userId);
+    } else {
+        ul = searchContent.getElementsByTagName('ul')[0];
+
+        searchContent.setAttribute('hidden', '');
+
+        while (ul.firstChild) {
+            ul.removeChild(ul.firstChild);
+        }
     }
 });
-socket.on('getOtherUserInfo', function(data) {
-    console.log(data);
-    var searchBar = document.getElementById('friendList').getElementsByClassName('searchBar')[0];
-    searchBar.classList.remove('spin');
-    searchBar.getElementsByTagName('h3')[0].classList.remove('icon-cog');
-    
-    new Friend(data.googName, data.username, data.googImgUrl, data.id);
+socket.on('getOtherUserInfo', function(userId, err, user) {
+    if (user) {
+        console.log(user);
+        var searchContent = document.getElementsByClassName('sidebar')[0].getElementsByClassName('searchContent')[0].getElementsByTagName('ul')[0];
+
+        while (searchContent.firstChild) {
+            searchContent.removeChild(searchContent.firstChild);
+        }
+
+        searchContent.appendChild(new SidebarItem(userId, user.googImgUrl, user.googName, user.username, function(event) {
+            var element = event.target;
+
+            if (element.tagName !== 'LI') {
+                element = element.parentElement;
+            }
+
+            socket.emit('sendFriendRequest', element.dataset.id);
+        }));
+    }
 });
-socket.on('sendFriendRequest', function(err, response, updated) {
-    console.log(err, response, updated);
+socket.on('sendFriendRequest', function(toId, err, updated, response) {
+    console.log(err, updated, response);
 });
