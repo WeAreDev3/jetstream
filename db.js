@@ -76,19 +76,19 @@ var def = {
 
     createChat: function (name, userList, callback) {
         // userlist is list of user IDs
-    	var addChatUser = function (userid, chatid, conn) {
+    	var addChatUser = function (userid, chatid, connection) {
     		r.table('users').get(userid).update({
     			chatList: r.row('chatList').append(chatid)
-    		}).run(conn, function (err, result) {
-                conn.close();
+    		}).run(connection, function (err, result) {
                 i++;
     			if (err) {
                     error.push(err);
                 } else if (i === j) {
+                    connection.close();
                     if (error.length > 0) {
                         callback(error);
                     } else {
-                        callback(null, result.generated_keys[0]);
+                        callback(null, chatid);
                     }
                 }
     		});
@@ -96,9 +96,9 @@ var def = {
             error = [],
             j = 0,
             i = 0;
-    	def.rql(function (err, conn) {
+    	def.rql(function (conn) {
     		r.table('chats').insert({
-    			'users': userlist,
+    			'users': userList,
     			'name': name,
                 'timestamp': r.now()
     		}).run(conn, function (err, result) {
@@ -106,8 +106,8 @@ var def = {
                     conn.close();
     				callback(err);
     			} else {
-    				for (var user in userlist) {
-    					addChatUser(userlist[user], result.generated_keys[0], conn);
+    				for (var user in userList) {
+    					addChatUser(userList[user], result.generated_keys[0], conn);
                         j++;
     				}
     			}
