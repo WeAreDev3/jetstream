@@ -1,50 +1,40 @@
-var Friend = Friend || function(displayName, username, profileUrl, id, spin) {
-    var searchBar = document.getElementById('friendList').getElementsByClassName('searchBar')[0],
-        friend = searchBar.getElementsByClassName('friend'),
-        container,
-        name,
-        uname,
-        profile;
+var SidebarItem = SidebarItem || function(id, imageUrl, titleText, subTitleText, metaInfo, onclick) {
+    var container,
+        title,
+        subTitle,
+        meta,
+        image;
 
-    if (friend.length) {
-        friend = friend[0];
-        container = friend;
-        name = friend.getElementsByTagName('h3')[0];
-        uname = friend.getElementsByTagName('h4')[0];
-        profile = friend.getElementsByTagName('img')[0];
-    } else {
-        container = document.createElement('div');
-        name = document.createElement('h3');
-        uname = document.createElement('h4');
-        profile = document.createElement('img');
+    container = document.createElement('li');
+    image = document.createElement('img');
+    title = document.createElement('h3');
+    subTitle = document.createElement('h4');
 
-        container.onclick = function(event) {
-            socket.emit('sendFriendRequest', container.dataset.id);
-        };
+    if (metaInfo && typeof metaInfo !== 'function') {
+        meta = document.createElement('h5');
+        meta.textContent = metaInfo;
+    } else if (typeof metaInfo === 'function') {
+        onclick = metaInfo;
     }
 
-    if (spin && !searchBar.classList.contains('spin')) {
-        console.log('spinning up');
-        name.textContent = '';
-        uname.textContent = '';
-        profile.src = '';
+    container.dataset.id = id;
 
-        searchBar.classList.add('spin');
-        name.classList.add('icon-cog');
-    } else {
-        container.dataset.id = id;
-        name.textContent = displayName;
-        uname.textContent = username;
-        profile.src = profileUrl;
+    image.src = imageUrl;
+    image.alt = titleText;
+    image.classList.add('profilePic');
+
+    title.textContent = titleText;
+    subTitle.textContent = subTitleText;
+
+    container.onclick = onclick;
+
+    container.appendChild(image);
+    container.appendChild(title);
+    container.appendChild(subTitle);
+
+    if (meta) {
+        container.appendChild(meta);
     }
 
-    if (!friend.length) {
-        profile.classList.add('profilePic');
-        container.classList.add('friend');
-        container.appendChild(profile);
-        container.appendChild(name);
-        container.appendChild(uname);
-
-        searchBar.appendChild(container);
-    }
+    return container;
 };
