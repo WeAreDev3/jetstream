@@ -27,6 +27,7 @@ app.use(express.static(config.root + '/public/js'));
 app.use(express.static(config.root + '/public/bower_components'));
 app.use(express.static(config.root + '/public/html'));
 app.use('/fonts', express.static(config.root + '/fonts'));
+app.use('/ng', express.static(config.root + '/server/views/ng'));
 
 // Log every request
 app.use(morgan('dev'));

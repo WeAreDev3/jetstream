@@ -15,6 +15,6 @@ jetstream.chats = [{
 jetstream.directive('chatWindow', function () {
     return {
         restrict: 'E',
-        templateUrl: 'chat.html'
+        templateUrl: '/ng/chat.html'
     };
 });
