@@ -41,7 +41,7 @@ module.exports = function(app, passport) {
             user: req.user,
             assets: {
                 css: ['http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,800|Grand+Hotel', 'app.css', 'main.css'],
-                js: ['/socket.io/socket.io.js', 'main.js', 'app.js']
+                js: ['/socket.io/socket.io.js', 'angular/angular.min.js', 'main.js', 'app.js']
             }
         });
     });
