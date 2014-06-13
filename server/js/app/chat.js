@@ -1,4 +1,5 @@
 var Chat = Chat || function(data, parent) {
+    console.log(data);
     this.users = [];
     for (var i = data.users.length - 1; i >= 0; i--) {
         this.users.push(users[data.users[i]].displayName);
@@ -38,19 +39,20 @@ Chat.prototype.initElement = function(parent) {
 };
 
 Chat.prototype.checkInput = function(e) {
-    var input = this.el.getElementsByTagName('input')[0],
+    var self = this,
+        input = this.el.getElementsByTagName('input')[0],
         message;
 
     if (e.keyCode === 13 && input.value.trim() !== '') {
         message = new Message({
             id: Math.floor(Math.random() * 1000),
             message: input.value,
-            chatId: this.id,
+            chatId: self.id,
             userId: currentUser.id,
-            timestamp: (new Date()).toISOString()
+            timestamp: (new Date()).toISOString(),
+            tempId: 99999 * Math.random()
         });
         input.value = '';
-        console.log('Sent a message:', message);
-        socket.emit('message', message);
+        socket.emit('sendMessage', message.tempId, message);
     }
 };

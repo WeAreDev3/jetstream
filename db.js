@@ -286,7 +286,7 @@ var def = {
             i = 0,
             j = 0,
             getUsersFriends = function (usr, runNext) {
-                db.rql(function (conn) {
+                def.rql(function (conn) {
                     r.table('users').get(usr)('friends')
                     .run(conn, function (err, res) {
                         j++;
@@ -380,6 +380,22 @@ var def = {
                             } else {
                                 callback(null, bool, res);
                             }
+                        });
+                    });
+                }
+            }
+        });
+    },
+    acceptFriendRequest: function (userId, fromId, callback) {
+        def.requestExists(fromId, userId, function(err, exists, response) {
+            if (err) {
+                callback(err);
+            } else {
+                if (exists) {
+                    def.rql(function(conn) {
+                        r.table('users').get(userId).update({
+                            requests: r.table('users').get(userId)('requests'),
+                            friends: r.table('users').get(userId)('friends').append(fromId)
                         });
                     });
                 }

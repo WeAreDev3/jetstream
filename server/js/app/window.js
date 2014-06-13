@@ -22,7 +22,7 @@ Win.prototype.handleDrag = function(e) {
         this.el.style.top = 0 + 'px';
     }
 
-    if (left >= 0) {
+    if (left >= 250) {
         if (left + rect.width <= window.innerWidth) {
             this.el.style.left = left + 'px';
             this.mouseX = e.clientX;
@@ -30,6 +30,6 @@ Win.prototype.handleDrag = function(e) {
             this.el.style.left = window.innerWidth - rect.width + 'px';
         }
     } else {
-        this.el.style.left = 0 + 'px';
+        this.el.style.left = 250 + 'px';
     }
 };

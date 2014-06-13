@@ -57,12 +57,21 @@ window.addEventListener('mouseup', function(e) {
 
 window.socket = io();
 socket.emit('ready');
-// socket.emit('getUsersFriends');
-socket.emit('getUsersFriendRequests');
 
-socket.on('getUsersFriends', function(friends) {
-    console.log(friends);
-    new FriendList(friends);
+socket.on('ready', function(user) {
+    currentUser.id = user.uuid;
+    currentUser.username = user.username;
+    currentUser.displayName = user.displayName;
+});
+
+socket.emit('getUsersFriends');
+socket.emit('getUsersFriendRequests');
+socket.emit('getUsersChats');
+
+socket.on('getUsersFriends', function(scope, err, friends) {
+    for (var i = friends.length - 1; i >= 0; i--) {
+        socket.emit('getOtherUserInfo', friends[i], 'friends');
+    }
 });
 socket.on('getUsersFriendRequests', function(scope, err, requests) {
     var sidebar = document.getElementsByClassName('sidebar')[0],
@@ -159,9 +168,73 @@ socket.on('getOtherUserInfo', function(userId, err, scope, user) {
                 socket.emit('acceptFriendRequest', element.dataset.id);
             });
             sidebar.getElementsByClassName('listRequests')[0].getElementsByTagName('ul')[0].appendChild(request);
+        } else if (scope === 'friends') {
+            var friend = new SidebarItem(userId, user.googImgUrl, user.googName, user.username, function(event) {
+                console.log('click');
+
+                var element = event.target;
+
+                if (element.tagName !== 'LI') {
+                    element = element.parentElement;
+                }
+
+                // socket.emit('createChat', 99999 * Math.random(), {
+                //     users: [userId]
+                // });
+            });
+            sidebar.getElementsByClassName('friendsList')[0].getElementsByTagName('ul')[0].appendChild(friend);
         }
+
     }
 });
 socket.on('sendFriendRequest', function(toId, err, updated, response) {
     console.log(err, updated, response);
+});
+socket.on('createChat', function(tempId, err, chatId) {
+    console.log(tempId, err, chatId);
+});
+
+socket.on('getUsersChats', function(scope, err, chatList) {
+    for (var i = chatList.length - 1; i >= 0; i--) {
+        socket.emit('getChatInfo', chatList[i]);
+    }
+});
+
+socket.on('getChatInfo', function(scope, err, info) {
+    var sidebar = document.getElementsByClassName('sidebar')[0],
+        time = new Date(info.timestamp),
+        timestamp = parseDate(time);
+    var chat = new SidebarItem(info.id, 'https://avatars0.githubusercontent.com/u/6441275?s=140', info.name, timestamp, function(event) {
+        new Chat({
+            users: info.users,
+            name: info.name,
+            id: info.id
+        }, document.getElementById('main'));
+
+        var element = event.target;
+
+        if (element.tagName !== 'LI') {
+            element = element.parentElement;
+        }
+
+        for (var i = 0; i < messages.length; i++) {
+            new Message(messages[i]);
+        }
+
+        // socket.emit('createChat', 99999 * Math.random(), {
+        //     users: [userId]
+        // });
+    });
+    sidebar.getElementsByClassName('chatList')[0].getElementsByTagName('ul')[0].appendChild(chat);
+});
+
+socket.on('sendMessage', function(tempId, err, response) {
+    // console.log(arguments);
+});
+socket.on('message', function(chatId, err, message) {
+    if (message.user !== currentUser.id) {
+        message.userId = message.user;
+        console.log(message);
+        new Message(message);
+    }
 });

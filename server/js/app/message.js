@@ -4,6 +4,7 @@ var Message = Message || function(data) {
     this.content = data.message;
     this.chatId = data.chatId;
     this.user = users[data.userId];
+    this.user.id = data.userId;
     this.timestamp = new Date(data.timestamp);
 
     this.initElement();
@@ -26,7 +27,7 @@ Message.prototype.initElement = function() {
         message = document.createElement('div');
 
     container.id = this.id;
-    container.classList.add('message', (this.user.username === currentUser.username ? 'right' : 'left'));
+    container.classList.add('message', (this.user.id === currentUser.id ? 'right' : 'left'));
     pic.src = this.user.imgUrl;
     pic.classList.add('profilePic');
     content.classList.add('message-content');

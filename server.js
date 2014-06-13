@@ -101,6 +101,7 @@ io.use(passportSocketIo.authorize({
 io.on('connection', function(socket) {
     l(socket.user.displayName, 'connected to Socket.IO');
     socket.once('ready', function() {
+        socket.emit('ready', socket.user);
         dbMessage.on('message', function(data) {
             l('listener created?');
             db.userInChat(socket.user.uuid, data.chatId, function(err, bool) {
@@ -134,13 +135,13 @@ io.on('connection', function(socket) {
                 }
             });
     });
-    socket.on('message', function(tempId, data) {
+    socket.on('sendMessage', function(tempId, data) {
         db.userInChat(socket.user.uuid, data.chatId, function(err, bool) {
             if (err) {
                 if (err.message === 'Cannot perform get_field on a non-object non-sequence `null`.') {
-                    socket.emit('message', tempId, err, 'Chat does not exist');
+                    socket.emit('sendMessage', tempId, err, 'Chat does not exist');
                 } else { // catch all
-                    socket.emit('message', tempId, err);
+                    socket.emit('sendMessage', tempId, err);
                 }
             } else {
                 if (bool) {
@@ -148,9 +149,9 @@ io.on('connection', function(socket) {
                         data.chatId, data.message, tempId);
                     db.createMessage(newMessage, function(err, res) {
                         if (err) {
-                            socket.emit('message', tempId, err);
+                            socket.emit('sendMessage', tempId, err);
                         } else {
-                            socket.emit('message', tempId, null, res);
+                            socket.emit('sendMessage', tempId, null, res);
                         }
                     });
                 }
@@ -158,6 +159,8 @@ io.on('connection', function(socket) {
         });
     });
     socket.on('createChat', function(tempId, data) {
+        data.users.push(socket.user.uuid);
+
         db.areFriends(data.users, function(err, ob) {
             var sendFriendRequests = function(person, nonfriend) {
                 db.sendFriendRequest(person,
@@ -192,21 +195,24 @@ io.on('connection', function(socket) {
                         }
                     );
                 };
-            if (Object.keys(ob).length === 0) {
-                db.createChat(data.name, data.users, function(err, chatId) {
-                    if (err) {
-                        socket.emit('createChat', tempId, err);
-                    } else {
-                        socket.emit('createChat', tempId, null, chatId);
-                    }
-                });
-            } else { // not all participants are friends
-                for (var person in ob) {
-                    for (var nonfriend in ob[person]) {
-                        isBlacklistedLooper(person, ob[pserson][nonfriend]);
+                
+                l('check friends');
+
+                if (Object.keys(ob).length === 0) {
+                    db.createChat(data.name, data.users, function(err, chatId) {
+                        if (err) {
+                            socket.emit('createChat', tempId, err);
+                        } else {
+                            socket.emit('createChat', tempId, null, chatId);
+                        }
+                    });
+                } else { // not all participants are friends
+                    for (var person in ob) {
+                        for (var nonfriend in ob[person]) {
+                            isBlacklistedLooper(person, ob[pserson][nonfriend]);
+                        }
                     }
                 }
-            }
         });
     });
     socket.on('getIdFromUsername', function(username) {
