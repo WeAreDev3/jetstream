@@ -1,8 +1,9 @@
 {% extends 'layouts/default.html' %}
 
 {% block body %}
-
-<chat-window ng-repeat="chat in jetstream.chats"></chat-window>
+<div ng-controller="chatList as chatList">
+    <chat-window ng-repeat="chat in chatList.chats"></chat-window>
+</div>
 
 <footer>
     <!-- About Us, GitHub, etc. -->
