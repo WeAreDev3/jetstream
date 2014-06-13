@@ -27,6 +27,7 @@ var fs = require('fs'), // File system module (built-in)
     // Directories and files, for easy access
     files = {
         'sass': './server/stylesheets/**/*.scss',
+        'angular': './server/views/ng/**/*.html',
         'js': './server/**/*.js',
         'allJS': ['*.js', 'server/**/*.js']
     }, dirs = {
@@ -46,6 +47,12 @@ gulp.task('css', function () {
         })) // Compile SASS to CSS
         .pipe(gulp.dest(dirs.build + '/css')) // Write to disk
         .pipe(livereload()); // Start a LiveReload instance
+});
+
+// The AngularJS task
+gulp.task('angularjs', function () {
+    return gulp.src(files.angular)
+        .pipe(gulp.dest(path.join(dirs.build, 'html')));
 });
 
 // Function that returns an array of all of the
@@ -112,9 +119,9 @@ gulp.task('watch', function () {
 });
 
 gulp.task('dev', function () {
-    sequence('clean', ['install', 'css', 'hint', 'js'], 'watch');
+    sequence('clean', ['install', 'css', 'angularjs', 'hint', 'js'], 'watch');
 });
 
 gulp.task('default', function () {
-    sequence('clean', ['css', 'hint', 'js'], 'watch');
+    sequence('clean', ['css', 'angularjs', 'hint', 'js'], 'watch');
 });
