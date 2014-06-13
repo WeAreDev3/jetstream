@@ -13,30 +13,6 @@ var Chat = Chat || function(data, parent) {
     app.windows.push(this);
 };
 
-Chat.prototype.initElement = function(parent) {
-    parent = parent || document.body;
-
-    var container = document.createElement('div'),
-        header = document.createElement('header'),
-        content = document.createElement('section'),
-        response = document.createElement('footer'),
-        input = document.createElement('input');
-
-    container.id = this.id;
-    container.classList.add('chat');
-    container.classList.add('window');
-    header.textContent = this.name;
-    input.onkeypress = this.checkInput.bind(this);
-
-    this.el = container;
-
-    response.appendChild(input);
-    container.appendChild(header);
-    container.appendChild(content);
-    container.appendChild(response);
-    parent.appendChild(container);
-};
-
 Chat.prototype.checkInput = function(e) {
     var input = this.el.getElementsByTagName('input')[0],
         message;
